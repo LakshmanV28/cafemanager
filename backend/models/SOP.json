@@ -1,0 +1,94 @@
+[
+    {"Coke": [
+      { "name": "Carbonated Water", "quantityToBeUsed": 500, "unit": "ml"},
+      { "name": "Sugar", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Caffeine", "quantityToBeUsed": 30, "unit": "mg"},
+      { "name": "Phosphoric Acid", "quantityToBeUsed": 10, "unit": "ml"},
+      { "name": "Caramel Color", "quantityToBeUsed": 5, "unit": "ml" }
+    ]},
+    {"Lemonade": [
+      { "name": "Lemon Juice", "quantityToBeUsed": 100, "unit": "ml"},
+      { "name": "Water", "quantityToBeUsed": 500, "unit": "ml"},
+      { "name": "Sugar", "quantityToBeUsed": 30, "unit": "g"},
+      { "name": "Ice Cubes", "quantityToBeUsed": 4, "unit": "pieces" }
+    ]},
+    {"Iced Tea": [
+      { "name": "Black Tea Leaves", "quantityToBeUsed": 5, "unit": "g"},
+      { "name": "Water", "quantityToBeUsed": 400, "unit": "ml"},
+      { "name": "Lemon Juice", "quantityToBeUsed": 50, "unit": "ml"},
+      { "name": "Honey/Sugar", "quantityToBeUsed": 20, "unit": "g"},
+      { "name": "Ice Cubes", "quantityToBeUsed": 3, "unit": "pieces" }
+    ]},
+    {"Coffee": [
+      { "name": "Coffee Beans (Ground)", "quantityToBeUsed": 10, "unit": "g"},
+      { "name": "Water", "quantityToBeUsed": 250, "unit": "ml"},
+      { "name": "Milk", "quantityToBeUsed": 50, "unit": "ml"},
+      { "name": "Sugar", "quantityToBeUsed": 10, "unit": "g" }
+    ]},
+    {"Milkshake": [
+      { "name": "Milk", "quantityToBeUsed": 300, "unit": "ml"},
+      { "name": "Ice Cream", "quantityToBeUsed": 2, "unit": "scoops"},
+      { "name": "Sugar", "quantityToBeUsed": 20, "unit": "g"},
+      { "name": "Flavoring", "quantityToBeUsed": 10, "unit": "ml" }
+    ]},
+    {"Ice Cream": [
+      { "name": "Milk", "quantityToBeUsed": 250, "unit": "ml"},
+      { "name": "Sugar", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Cream", "quantityToBeUsed": 100, "unit": "ml"},
+      { "name": "Flavoring", "quantityToBeUsed": 5, "unit": "ml" }
+    ]},
+    {"Brownie": [
+      { "name": "Flour", "quantityToBeUsed": 200, "unit": "g"},
+      { "name": "Cocoa Powder", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Butter", "quantityToBeUsed": 100, "unit": "g"},
+      { "name": "Eggs", "quantityToBeUsed": 2, "unit": "pieces"},
+      { "name": "Sugar", "quantityToBeUsed": 150, "unit": "g" }
+    ]},
+    {"Cheesecake": [
+      { "name": "Cream Cheese", "quantityToBeUsed": 250, "unit": "g"},
+      { "name": "Sugar", "quantityToBeUsed": 100, "unit": "g"},
+      { "name": "Eggs", "quantityToBeUsed": 2, "unit": "pieces"},
+      { "name": "Graham Crackers", "quantityToBeUsed": 150, "unit": "g" }
+    ]},
+    {"Donut": [
+      { "name": "Flour", "quantityToBeUsed": 250, "unit": "g"},
+      { "name": "Sugar", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Yeast", "quantityToBeUsed": 5, "unit": "g"},
+      { "name": "Milk", "quantityToBeUsed": 100, "unit": "ml" }
+    ]},
+    {"Cupcake": [
+      { "name": "Flour", "quantityToBeUsed": 150, "unit": "g"},
+      { "name": "Sugar", "quantityToBeUsed": 100, "unit": "g"},
+      { "name": "Butter", "quantityToBeUsed": 100, "unit": "g"},
+      { "name": "Eggs", "quantityToBeUsed": 2, "unit": "pieces" }
+    ]},
+    {"Salad": [
+      { "name": "Lettuce", "quantityToBeUsed": 100, "unit": "g"},
+      { "name": "Tomato", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Cucumber", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Dressing", "quantityToBeUsed": 20, "unit": "ml" }
+    ]},
+    {"Grilled Chicken": [
+      { "name": "Chicken Breast", "quantityToBeUsed": 200, "unit": "g"},
+      { "name": "Olive Oil", "quantityToBeUsed": 10, "unit": "ml"},
+      { "name": "Spices", "quantityToBeUsed": 5, "unit": "g" }
+    ]},
+    {"Veggie Wrap": [
+      { "name": "Tortilla", "quantityToBeUsed": 1, "unit": "piece"},
+      { "name": "Lettuce", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Cucumber", "quantityToBeUsed": 50, "unit": "g"},
+      { "name": "Dressing", "quantityToBeUsed": 20, "unit": "ml" }
+    ]},
+    {"Dumplings": [
+      { "name": "Flour", "quantityToBeUsed": 200, "unit": "g"},
+      { "name": "Ground Meat", "quantityToBeUsed": 150, "unit": "g"},
+      { "name": "Soy Sauce", "quantityToBeUsed": 10, "unit": "ml"},
+      { "name": "Ginger", "quantityToBeUsed": 5, "unit": "g" }
+    ]},
+    {"Avocado Toast": [
+      { "name": "Bread", "quantityToBeUsed": 1, "unit": "slice"},
+      { "name": "Avocado", "quantityToBeUsed": 100, "unit": "g"},
+      { "name": "Olive Oil", "quantityToBeUsed": 10, "unit": "ml" }
+    ]}
+]
+  
