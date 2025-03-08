@@ -18,9 +18,6 @@ router.post("/add", async (req, res) => {
   try {
     const { name, price, category } = req.body;
 
-    console.log(name,price,category);
-    
-
     if (!name || !price || !category) {
       return res.status(400).json({ message: "All fields are required" });
     }
