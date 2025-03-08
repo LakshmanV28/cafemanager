@@ -21,7 +21,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products");
+      const res = await axios.get("https://cashman-node.onrender.com/api/products");
       setCategories(res.data);
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -35,7 +35,7 @@ const Products = () => {
 
   const addNewProduct = async () => {
     try {
-      await axios.post("http://localhost:5000/api/products/add", newProduct);
+      await axios.post("https://cashman-node.onrender.com/api/products/add", newProduct);
       fetchProducts();
       setShowAddProductModal(false);
       alert("Product added successfully!");
@@ -95,7 +95,7 @@ const Products = () => {
     };
 
     try {
-      await axios.post("http://localhost:5000/api/cart/add", purchaseData);
+      await axios.post("https://cashman-node.onrender.com/api/cart/add", purchaseData);
       alert("Purchase Successful");
       setCart([]); // Clear cart after checkout
       setShowCart(false);
@@ -117,7 +117,7 @@ const Products = () => {
 
   const deleteProduct = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/products/delete", {
+      await axios.delete("https://cashman-node.onrender.com/api/products/delete", {
         data: { name: productToDelete.name, category: productToDelete.category },
       });
       alert("Product deleted successfully!");

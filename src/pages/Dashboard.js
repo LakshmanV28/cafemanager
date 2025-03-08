@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/dashboard");
+      const response = await axios.get("https://cashman-node.onrender.com/api/dashboard");
       console.log(response.data)
       setTopSellingProducts(response.data.topSellingProducts || []);
       setTotalRevenue(response.data.totalEarnings || 0);
