@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Card, Row, Col } from "react-bootstrap";
-require("dotenv").config();
 
 const Closing = () => {
     const [inventory, setInventory] = useState([]);
