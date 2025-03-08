@@ -10,8 +10,12 @@ const RecipeList = () => {
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteRecipeModal, setShowDeleteRecipeModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddRecipeModal, setShowAddRecipeModal] = useState(false);
   const [newIngredient, setNewIngredient] = useState({ name: "", quantityToBeUsed: 0, unit: "" });
+  const [newRecipe, setNewRecipe] = useState({ productName: "", ingredients: [] });
+
 
   useEffect(() => {
     fetchRecipes();
@@ -34,6 +38,24 @@ const RecipeList = () => {
     setSelectedIngredient({ ...selectedIngredient, [field]: e.target.value });
   };
 
+  const handleDeleteRecipeClick = (recipe) => {
+    setSelectedRecipe(recipe);
+    setShowDeleteRecipeModal(true);
+  };
+
+  
+
+  const addNewRecipe = () => {
+    axios
+      .post("http://localhost:5000/api/reciepes/add", newRecipe)
+      .then(() => {
+        fetchRecipes();
+        setShowAddRecipeModal(false);
+        alert("Recipe added successfully!");
+      })
+      .catch((error) => console.error("Error adding recipe:", error));
+  };
+
   const saveUpdatedIngredient = () => {
     const updatedIngredients = selectedRecipe.ingredients.map((ing) =>
       ing.name === selectedIngredient.name ? selectedIngredient : ing
@@ -51,6 +73,21 @@ const RecipeList = () => {
       .catch((error) => console.error("Error updating ingredient:", error));
   };
 
+  const deleteRecipe = () => {
+    axios
+      .delete(`http://localhost:5000/api/reciepes/delete/${selectedRecipe._id}`)
+      .then(() => {
+        fetchRecipes();
+        setShowDeleteRecipeModal(false);
+        alert("Recipe deleted successfully!");
+      })
+      .catch((error) => console.error("Error deleting recipe:", error));
+  };
+
+  const handleNewRecipeChange = (e, field) => {
+    setNewRecipe({ ...newRecipe, [field]: e.target.value });
+  };
+
   const handleAddIngredientClick = (recipe) => {
     setSelectedRecipe(recipe);
     setNewIngredient({ name: "", quantityToBeUsed: 0, unit: "" });
@@ -60,7 +97,7 @@ const RecipeList = () => {
   const handleNewIngredientChange = (e, field) => {
     setNewIngredient({ ...newIngredient, [field]: e.target.value });
   };
-  
+
   const handleDeleteClick = (recipe, ingredient) => {
     setSelectedRecipe(recipe);
     setSelectedIngredient(ingredient);
@@ -110,6 +147,9 @@ const RecipeList = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+      <button className="btn btn-success mb-3" onClick={() => setShowAddRecipeModal(true)}>
+        Add Recipe
+      </button>
       <div className="row">
         {recipes
           .filter((recipe) => recipe.productName.toLowerCase().includes(search.toLowerCase()))
@@ -157,11 +197,46 @@ const RecipeList = () => {
                   >
                     Add Ingredient
                   </button>
+
+                  <button className="btn btn-danger w-100 mt-2" onClick={() => handleDeleteRecipeClick(recipe)}>
+                    Delete Recipe
+                  </button>
                 </div>
               </div>
             </div>
           ))}
       </div>
+
+      {/* Add Recipe Modal */}
+      {showAddRecipeModal && (
+        <div className="modal d-block bg-dark bg-opacity-50">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Add New Recipe</h5>
+                <button className="btn-close" onClick={() => setShowAddRecipeModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <label className="form-label">Recipe Name:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={newRecipe.productName}
+                  onChange={(e) => handleNewRecipeChange(e, "productName")}
+                />
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowAddRecipeModal(false)}>
+                  Close
+                </button>
+                <button className="btn btn-success" onClick={addNewRecipe}>
+                  Add Recipe
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Update Ingredient Modal */}
       {showUpdateModal && (
@@ -273,6 +348,33 @@ const RecipeList = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Recipe Confirmation Modal */}
+      {showDeleteRecipeModal && (
+        <div className="modal d-block bg-dark bg-opacity-50">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Deletion</h5>
+                <button className="btn-close" onClick={() => setShowDeleteRecipeModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                Are you sure you want to delete <strong>{selectedRecipe?.productName}</strong>?
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowDeleteRecipeModal(false)}>
+                  Cancel
+                </button>
+                <button className="btn btn-danger" onClick={deleteRecipe}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      
     </div>
   );
 };

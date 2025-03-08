@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Row, Col, Card, Button, Form, Offcanvas } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Form, Offcanvas, Modal } from "react-bootstrap";
 
 const Products = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [cart, setCart] = useState([]);
   const [modeOfPayment, setModeOfPayment] = useState("Cash");
-  const [showCart, setShowCart] = useState(false); // Offcanvas state
+  const [showCart, setShowCart] = useState(false);
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [newProduct, setNewProduct] = useState({ name: "", price: "", category: "" });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState({ name: "", category: "" });
+
+
 
   useEffect(() => {
     fetchProducts();
@@ -19,6 +25,22 @@ const Products = () => {
       setCategories(res.data);
     } catch (err) {
       console.error("Error fetching products:", err);
+    }
+  };
+
+  const handleNewProductChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const addNewProduct = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/products/add", newProduct);
+      fetchProducts();
+      setShowAddProductModal(false);
+      alert("Product added successfully!");
+    } catch (error) {
+      console.error("Error adding product:", error);
     }
   };
 
@@ -83,6 +105,31 @@ const Products = () => {
   };
 
 
+  const handleShowDeleteModal = (productName, categoryName) => {
+    setProductToDelete({ name: productName, category: categoryName });
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+
+  const deleteProduct = async () => {
+    try {
+      await axios.delete("http://localhost:5000/api/products/delete", {
+        data: { name: productToDelete.name, category: productToDelete.category },
+      });
+      alert("Product deleted successfully!");
+      fetchProducts(); // Refresh product list
+      handleCloseDeleteModal();
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("Failed to delete product. Please try again.");
+    }
+  };
+
+
   const getProductQuantity = (name) => {
     const item = cart.find((product) => product.name === name);
     return item ? item.quantity : 0;
@@ -112,6 +159,12 @@ const Products = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </Form>
+
+      <Button variant="success" onClick={() => setShowAddProductModal(true)}>
+        Add Product
+      </Button>
+
+
 
       {filteredCategories.length === 0 ? (
         <h4 className="text-center text-muted">No products found</h4>
@@ -154,6 +207,13 @@ const Products = () => {
                             +
                           </Button>
                         </div>
+                        <Button
+                          variant="outline-danger"
+                          className="mt-2"
+                          onClick={() => handleShowDeleteModal(product.name, categoryData.category)}
+                        >
+                          Delete
+                        </Button>
                       </Card.Body>
                     </Card>
                   </Col>
@@ -173,6 +233,71 @@ const Products = () => {
           </Button>
         </div>
       )}
+
+      {/* Add Product Modal */}
+      <Modal show={showAddProductModal} onHide={() => setShowAddProductModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Product Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={newProduct.name}
+                onChange={handleNewProductChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Price</Form.Label>
+              <Form.Control
+                type="number"
+                name="price"
+                value={newProduct.price}
+                onChange={handleNewProductChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Category</Form.Label>
+              <Form.Control
+                type="text"
+                name="category"
+                value={newProduct.category}
+                onChange={handleNewProductChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAddProductModal(false)}>
+            Close
+          </Button>
+          <Button variant="success" onClick={addNewProduct}>
+            Add Product
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Product Modal */}
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete <strong>{productToDelete.name}</strong>?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDeleteModal}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={deleteProduct}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
 
       {/* 🛒 Offcanvas for Cart */}
       <Offcanvas show={showCart} onHide={() => setShowCart(false)} placement="end">
