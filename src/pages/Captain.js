@@ -85,7 +85,7 @@ const Products = () => {
     };
 
     try {
-      await axios.post("http://localhost:5000/api/chef/add", orderData);
+      await axios.post("https://cashman-node.onrender.com/api/chef/add", orderData);
     // console.log(orderData);
     
       alert("Order Placed Successfully!");

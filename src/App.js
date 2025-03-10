@@ -12,6 +12,7 @@ import Closing from "./pages/Closing";
 import Captain from "./pages/Captain";
 import Chef from "./pages/Chef";
 import EditOrder from "./pages/EditOrders";
+import BillCounter from "./pages/BillCounter";
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/captain" element={token ? <Captain /> : <Navigate to="/login" />} />
         <Route path="/chef" element={token ? <Chef /> : <Navigate to="/login" />} />
         <Route path="/editorders" element={token ? <EditOrder /> : <Navigate to="/login" />} />
+        <Route path="/billcounter" element={token ? <BillCounter /> : <Navigate to="/login" />} />
 
       </Routes>
     </Router>

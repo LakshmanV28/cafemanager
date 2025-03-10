@@ -11,6 +11,7 @@ export default function NavigationBar() {
             <Nav.Link href="/captain">Captain</Nav.Link>
             <Nav.Link href="/chef">Chef</Nav.Link>
             <Nav.Link href="/editOrders">Edit_Orders</Nav.Link>
+            <Nav.Link href="/billcounter">Bill_counter</Nav.Link>
             <Nav.Link href="/dashboard">Dashboard</Nav.Link>
             <Nav.Link href="/transactions">Transactions</Nav.Link>
             <Nav.Link href="/inventory">Inventory</Nav.Link>

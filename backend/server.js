@@ -17,6 +17,7 @@ const InventoryRoutes = require("./routes/inventory")
 const ReciepeRoutes = require("./routes/reciepe")
 const ChefRoutes = require("./routes/chef")
 const Edit_OrdersRoutes = require("./routes/editorder")
+const Bill_CounterRoutes = require("./routes/billcounter")
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productsRoutes);
@@ -26,6 +27,7 @@ app.use("/api/inventory", InventoryRoutes);
 app.use("/api/reciepes", ReciepeRoutes);
 app.use("/api/chef", ChefRoutes);
 app.use("/api/editorders", Edit_OrdersRoutes);
+app.use("/api/billcounter", Bill_CounterRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,

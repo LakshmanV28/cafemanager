@@ -8,20 +8,48 @@ const EditOrder = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteItemData, setDeleteItemData] = useState({ orderId: "", itemId: "" });
     const [newItem, setNewItem] = useState({ name: "", qty: 1, comment: "", orderId: "" });
-    const [modeOfPayment, setModeOfPayment] = useState("Cash");
+    const [products, setProducts] = useState([]); // Store product names
+    const [searchTerm, setSearchTerm] = useState(""); // Search input state
+    const [filteredProducts, setFilteredProducts] = useState([]); // Filtered product list
 
     useEffect(() => {
         fetchOrders(); // Fetch all orders when component mounts
+        fetchProducts();
     }, []);
+
+    useEffect(() => {
+        // Filter products based on search term
+        if (searchTerm.trim() === "") {
+            setFilteredProducts(products);
+        } else {
+            setFilteredProducts(
+                products.flatMap(product =>
+                    product.products.filter(p =>
+                        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                )
+            );
+        }
+    }, [searchTerm, products]);
 
     // ✅ Fetch orders correctly
     const fetchOrders = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/api/editorders");
+            const response = await axios.get("https://cashman-node.onrender.com/api/editorders");
             setOrders(response.data || []); // Ensure orders is always an array
         } catch (error) {
             console.error("Error fetching orders:", error);
             setOrders([]); // Avoid undefined errors
+        }
+    };
+
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get("https://cashman-node.onrender.com/api/products");
+            setProducts(response.data || []); // Ensure it's always an array
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            setProducts([]);
         }
     };
 
@@ -33,7 +61,7 @@ const EditOrder = () => {
         }
         try {
             const response = await axios.post(
-                `http://localhost:5000/api/editorders/add-item/${newItem.orderId}`,
+                `https://cashman-node.onrender.com/api/editorders/add-item/${newItem.orderId}`,
                 newItem
             );
             setOrders((prevOrders) =>
@@ -47,11 +75,16 @@ const EditOrder = () => {
         }
     };
 
+    const handleProductSelect = (name) => {
+        setNewItem({ ...newItem, name });
+        setSearchTerm(name); // Update search term with selected product name
+    };
+
     // ✅ Update a specific item inside an order
     const handleUpdateItem = async (orderId, itemId, qty, comment) => {
         try {
             const response = await axios.put(
-                `http://localhost:5000/api/editorders/update-item/${orderId}/${itemId}`,
+                `https://cashman-node.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
                 { qty, comment }
             );
             setOrders((prevOrders) =>
@@ -73,7 +106,7 @@ const EditOrder = () => {
         try {
             const { orderId, itemId } = deleteItemData;
             const response = await axios.delete(
-                `http://localhost:5000/api/editorders/delete-item/${orderId}/${itemId}`
+                `https://cashman-node.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
             );
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>
@@ -87,26 +120,6 @@ const EditOrder = () => {
     };
 
 
-
-    const handleCheckout = async (order) => {
-        try {
-            await axios.post(`https://cashman-node.onrender.com/api/cart/add`, {
-                items: order.items.map((item) => ({
-                    name: item.name,
-                    category: item.category || "Uncategorized",
-                    price: item.price || 0,
-                    quantity: item.qty,
-                })),
-                total: order.items.reduce((sum, item) => sum + (item.price || 0) * item.qty, 0),
-                modeOfPayment,
-            });
-
-            alert(`Order for Table ${order.tableNo} checked out successfully!`);
-            fetchOrders(); // ✅ Ensure the list updates properly
-        } catch (error) {
-            console.error("Error during checkout:", error);
-        }
-    };
 
 
     return (
@@ -156,12 +169,7 @@ const EditOrder = () => {
                                         <p className="text-muted">No items in this order</p>
                                     )}
                                 </Card.Body>
-                                {/* <Card.Footer className="d-flex justify-content-between">
 
-                                    <Button variant="primary" onClick={() => handleCheckout(order)}>
-                                        Paid
-                                    </Button>
-                                </Card.Footer> */}
                             </Card>
                         </Col>
                     ))}
@@ -196,14 +204,50 @@ const EditOrder = () => {
                                 ))}
                             </Form.Control>
                         </Form.Group>
+
+                        {/* Searchable Product Selection */}
                         <Form.Group>
-                            <Form.Label>Item Name</Form.Label>
+                            <Form.Label>Search Product</Form.Label>
                             <Form.Control
                                 type="text"
-                                value={newItem.name}
-                                onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                                placeholder="Type to search product..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
+                            {searchTerm && (
+                                <div
+                                    style={{
+                                        border: "1px solid #ccc",
+                                        maxHeight: "150px",
+                                        overflowY: "auto",
+                                        marginTop: "5px",
+                                        position: "absolute",
+                                        width: "100%",
+                                        backgroundColor: "#fff",
+                                        zIndex: "1000",
+                                    }}
+                                >
+                                    {filteredProducts.length > 0 ? (
+                                        filteredProducts.map((product, index) => (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    padding: "5px",
+                                                    cursor: "pointer",
+                                                    borderBottom: "1px solid #ddd",
+                                                }}
+                                                onClick={() => handleProductSelect(product.name)}
+                                            >
+                                                {product.name}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div style={{ padding: "5px" }}>No products found</div>
+                                    )}
+                                </div>
+                            )}
                         </Form.Group>
+
                         <Form.Group>
                             <Form.Label>Quantity</Form.Label>
                             <Form.Control
