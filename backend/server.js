@@ -15,6 +15,8 @@ const cartRoutes = require("./routes/cart");
 const dashboardRoutes = require("./routes/dashboard")
 const InventoryRoutes = require("./routes/inventory")
 const ReciepeRoutes = require("./routes/reciepe")
+const ChefRoutes = require("./routes/chef")
+const Edit_OrdersRoutes = require("./routes/editorder")
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productsRoutes);
@@ -22,6 +24,8 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/inventory", InventoryRoutes);
 app.use("/api/reciepes", ReciepeRoutes);
+app.use("/api/chef", ChefRoutes);
+app.use("/api/editorders", Edit_OrdersRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
