@@ -20,12 +20,11 @@ export default function NavigationBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             {/* Show navigation links based on role */}
-            {token && role === "Bill Counter" && (
+            {token && role === "Admin" && (
               <>
                 <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
                 <Nav.Link as={Link} to="/transactions">Transactions</Nav.Link>
-                <Nav.Link as={Link} to="/closing">Closing</Nav.Link>
-                <Nav.Link as={Link} to="/reciepe">Recipe</Nav.Link>
+                <Nav.Link as={Link} to="/closing">Closing</Nav.Link>                
                 <Nav.Link as={Link} to="/billcounter">Bill Counter</Nav.Link>
                 <Nav.Link as={Link} to="/inventory">Inventory</Nav.Link>
               </>
@@ -41,6 +40,7 @@ export default function NavigationBar() {
             {token && role === "Chef" && (
               <>
                 <Nav.Link as={Link} to="/chef">Chef</Nav.Link>
+                <Nav.Link as={Link} to="/reciepe">Recipe</Nav.Link>
               </>
             )}
 

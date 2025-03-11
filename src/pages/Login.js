@@ -27,7 +27,7 @@ export default function Login({ setToken }) {
       setToken(token);
 
       // Redirect based on role
-      if (role === "Bill Counter") {
+      if (role === "Admin") {
         navigate("/dashboard");
       } else if (role === "Captain") {
         navigate("/captain");
@@ -58,8 +58,8 @@ export default function Login({ setToken }) {
 
             {/* Role Selection */}
             <div className="mb-3 d-flex justify-content-around">
-              <Button variant={role === "Bill Counter" ? "primary" : "secondary"} onClick={() => setRole("Bill Counter")}>
-                Bill Counter
+              <Button variant={role === "Admin" ? "primary" : "secondary"} onClick={() => setRole("Admin")}>
+                Admin
               </Button>
               <Button variant={role === "Captain" ? "primary" : "secondary"} onClick={() => setRole("Captain")}>
                 Captain

@@ -29,7 +29,7 @@ export default function App() {
         <Route path="*" element={<Login setToken={setToken} />} />
 
         {/* Routes for Bill Counter */}
-        {role === "Bill Counter" && (
+        {role === "Admin" && (
           <>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />
