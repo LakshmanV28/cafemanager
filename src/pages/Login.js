@@ -6,33 +6,39 @@ import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 export default function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(""); // Store role
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!role) {
-      alert("Please select a role!");
-      return;
-    }
-
     try {
       const res = await axios.post("https://cashman-node.onrender.com/api/auth/login", { email, password });
       const { token } = res.data;
 
-      localStorage.setItem("token", token); // Store JWT
-      localStorage.setItem("role", role); // Store selected role
+      if (!token) {
+        setError("Invalid response from server!");
+        return;
+      }
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("email", email); // ✅ Store email in localStorage
       setToken(token);
 
+<<<<<<< HEAD
       // Redirect based on role
       if (role === "Admin") {
+=======
+      // Redirect based on email
+      if (email.toLowerCase() === "admin@cafe.com") {
+>>>>>>> ce61d99ff77b57542c01fad6802f8a95e8b97e89
         navigate("/dashboard");
-      } else if (role === "Captain") {
+      } else if (email.toLowerCase() === "captain@cafe.com") {
         navigate("/captain");
-      } else if (role === "Chef") {
+      } else if (email.toLowerCase() === "chef@cafe.com") {
         navigate("/chef");
+      } else {
+        setError("Unauthorized email!");
       }
     } catch (err) {
       setError("Invalid credentials!");
@@ -48,14 +54,27 @@ export default function Login({ setToken }) {
           <Form onSubmit={handleLogin}>
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <Form.Control
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </Form.Group>
 
+<<<<<<< HEAD
             {/* Role Selection */}
             <div className="mb-3 d-flex justify-content-around">
               <Button variant={role === "Admin" ? "primary" : "secondary"} onClick={() => setRole("Admin")}>
@@ -69,6 +88,8 @@ export default function Login({ setToken }) {
               </Button>
             </div>
 
+=======
+>>>>>>> ce61d99ff77b57542c01fad6802f8a95e8b97e89
             <Button type="submit" variant="primary" className="w-100">
               Login
             </Button>

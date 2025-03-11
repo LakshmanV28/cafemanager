@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Table, Card, Row, Col, Button } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Container, Table, Card, Form, Row, Col } from "react-bootstrap";
 import { format, parseISO, isWithinInterval } from "date-fns";
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
+import { Bar, Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement } from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement);
 
 const Dashboard = () => {
   const [ordersByDate, setOrdersByDate] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [specificDate, setSpecificDate] = useState(null);
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
   useEffect(() => {
     fetchOrders();
@@ -18,21 +23,22 @@ const Dashboard = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get("https://cashman-node.onrender.com/api/orders");
-      setOrdersByDate(groupByDate(response.data));
+      const groupedData = groupByDate(response.data);
+      setOrdersByDate(groupedData);
+      setTotalRevenue(Object.values(groupedData).reduce((acc, data) => acc + data.totalRevenue, 0));
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
   };
 
   const groupByDate = (orders) => {
-    if (!orders || typeof orders !== "object") return {};
+    if (!orders) return {};
 
     return Object.entries(orders).reduce((acc, [date, orderList]) => {
       const formattedDate = format(parseISO(date), "yyyy-MM-dd");
-
-      let totalRevenue = 0;
+      let totalRevenue = 0, totalOrders = orderList.length;
       let productSales = {};
-
+      
       orderList.forEach((order) => {
         totalRevenue += order.total;
         order.items.forEach((item) => {
@@ -51,165 +57,102 @@ const Dashboard = () => {
 
       acc[formattedDate] = {
         totalRevenue,
-        topSellingProducts: Object.values(productSales).sort(
-          (a, b) => b.totalQuantitySold - a.totalQuantitySold
-        ),
+        totalOrders,
+        topSellingProducts: Object.values(productSales).sort((a, b) => b.totalQuantitySold - a.totalQuantitySold),
       };
-
       return acc;
     }, {});
   };
 
-  const filterOrdersByDateRange = () => {
-    if (!startDate || !endDate) return { totalRevenue: 0, topSellingProducts: [] };
+  const getFilteredData = () => {
+    let filteredOrders = {};
+    if (specificDate) {
+      const formattedDate = format(specificDate, "yyyy-MM-dd");
+      filteredOrders = ordersByDate[formattedDate] || { totalRevenue: 0, topSellingProducts: [] };
+    } else if (startDate && endDate) {
+      let totalRevenue = 0;
+      let productSales = {};
+      Object.entries(ordersByDate).forEach(([date, data]) => {
+        const orderDate = parseISO(date);
+        if (isWithinInterval(orderDate, { start: startDate, end: endDate })) {
+          totalRevenue += data.totalRevenue;
+          data.topSellingProducts.forEach((product) => {
+            if (!productSales[product.name]) {
+              productSales[product.name] = { ...product };
+            } else {
+              productSales[product.name].totalQuantitySold += product.totalQuantitySold;
+              productSales[product.name].totalSales += product.totalSales;
+            }
+          });
+        }
+      });
+      filteredOrders = { totalRevenue, topSellingProducts: Object.values(productSales).sort((a, b) => b.totalQuantitySold - a.totalQuantitySold) };
+    }
+    return filteredOrders;
+  };
 
-    let totalRevenue = 0;
-    let productSales = {};
-
-    Object.entries(ordersByDate).forEach(([date, data]) => {
-      const orderDate = parseISO(date);
-      if (isWithinInterval(orderDate, { start: startDate, end: endDate })) {
-        totalRevenue += data.totalRevenue;
-
-        data.topSellingProducts.forEach((product) => {
-          if (!productSales[product.name]) {
-            productSales[product.name] = { ...product };
-          } else {
-            productSales[product.name].totalQuantitySold += product.totalQuantitySold;
-            productSales[product.name].totalSales += product.totalSales;
-          }
-        });
-      }
-    });
+  const generateChartData = () => {
+    const labels = Object.keys(ordersByDate);
+    const revenueData = labels.map((date) => ordersByDate[date].totalRevenue);
+    const ordersData = labels.map((date) => ordersByDate[date].totalOrders);
 
     return {
-      totalRevenue,
-      topSellingProducts: Object.values(productSales).sort(
-        (a, b) => b.totalQuantitySold - a.totalQuantitySold
-      ),
+      revenueTrend: {
+        labels,
+        datasets: [
+          {
+            label: "Revenue",
+            data: revenueData,
+            borderColor: "blue",
+            fill: false,
+          },
+        ],
+      },
+      avgOrders: {
+        labels,
+        datasets: [
+          {
+            label: "Orders per Day",
+            data: ordersData,
+            backgroundColor: "orange",
+          },
+        ],
+      },
     };
   };
 
-  const filterOrdersBySpecificDate = () => {
-    if (!specificDate) return { totalRevenue: 0, topSellingProducts: [] };
-    const formatted = format(specificDate, "yyyy-MM-dd");
-    return ordersByDate[formatted] || { totalRevenue: 0, topSellingProducts: [] };
-  };
-
-  const filteredByDate = filterOrdersBySpecificDate();
-  const filteredByRange = filterOrdersByDateRange();
-
-  const clearFilters = () => {
-    setStartDate(null);
-    setEndDate(null);
-    setSpecificDate(null);
-  };
+  const { revenueTrend, avgOrders } = generateChartData();
+  const filteredData = getFilteredData();
 
   return (
     <Container className="mt-4">
       <h2 className="text-center mb-4">Dashboard</h2>
-
-      <Row className="mb-4 text-center">
-        <Col md={4}>
-          <h5>Select Specific Date</h5>
-          <DayPicker
-            mode="single"
-            selected={specificDate}
-            onSelect={(date) => {
-              setSpecificDate(date);
-              setStartDate(null);
-              setEndDate(null);
-            }}
-          />
+      <Card className="p-3 mb-4 text-center">
+        <h4>Total Revenue Till Now: ₹{totalRevenue.toFixed(2)}</h4>
+      </Card>
+      <Row className="mb-3">
+        <Col>
+          <Form.Label>Select Specific Date:</Form.Label>
+          <DatePicker selected={specificDate} onChange={setSpecificDate} dateFormat="yyyy-MM-dd" className="form-control" isClearable placeholderText="Choose a date" />
         </Col>
-
-        <Col md={4}>
-          <h5>Select Start Date</h5>
-          <DayPicker
-            mode="single"
-            selected={startDate}
-            onSelect={(date) => {
-              setStartDate(date);
-              setSpecificDate(null);
-            }}
-          />
+        <Col>
+          <Form.Label>Select Start Date:</Form.Label>
+          <DatePicker selected={startDate} onChange={setStartDate} dateFormat="yyyy-MM-dd" className="form-control" isClearable placeholderText="Choose a start date" />
         </Col>
-
-        <Col md={4}>
-          <h5>Select End Date</h5>
-          <DayPicker
-            mode="single"
-            selected={endDate}
-            onSelect={(date) => {
-              setEndDate(date);
-              setSpecificDate(null);
-            }}
-          />
+        <Col>
+          <Form.Label>Select End Date:</Form.Label>
+          <DatePicker selected={endDate} onChange={setEndDate} dateFormat="yyyy-MM-dd" className="form-control" isClearable placeholderText="Choose an end date" />
         </Col>
       </Row>
-
-      <div className="text-center mb-3">
-        <Button variant="secondary" onClick={clearFilters}>
-          Clear Filters
-        </Button>
-      </div>
-
-      {specificDate && (
+      {filteredData.totalRevenue > 0 && (
         <Card className="p-3 mb-4 text-center">
-          <h4>
-            Revenue on {format(specificDate, "yyyy-MM-dd")}: ₹
-            {filteredByDate.totalRevenue.toFixed(2)}
-          </h4>
+          <h4>Total Revenue: ₹{filteredData.totalRevenue.toFixed(2)}</h4>
         </Card>
       )}
-
-      {startDate && endDate && (
-        <Card className="p-3 mb-4 text-center">
-          <h4>
-            Revenue from {format(startDate, "yyyy-MM-dd")} to{" "}
-            {format(endDate, "yyyy-MM-dd")}: ₹
-            {filteredByRange.totalRevenue.toFixed(2)}
-          </h4>
-        </Card>
-      )}
-
-      {(specificDate || (startDate && endDate)) && (
-        <>
-          <h3 className="mb-3 text-center">
-            Top 5 Selling Products{" "}
-            {specificDate
-              ? `on ${format(specificDate, "yyyy-MM-dd")}`
-              : `from ${format(startDate, "yyyy-MM-dd")} to ${format(endDate, "yyyy-MM-dd")}`}
-          </h3>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Product</th>
-                <th>Category</th>
-                <th>Quantity</th>
-                <th>Sales (₹)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(specificDate
-                ? filteredByDate.topSellingProducts
-                : filteredByRange.topSellingProducts
-              )
-                .slice(0, 5)
-                .map((product, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{product.name}</td>
-                    <td>{product.category}</td>
-                    <td>{product.totalQuantitySold}</td>
-                    <td>₹{product.totalSales.toFixed(2)}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </Table>
-        </>
-      )}
+      <h4 className="text-center">Revenue Trend</h4>
+      <Line data={revenueTrend} />
+      <h4 className="text-center mt-4">Average Orders per Day</h4>
+      <Bar data={avgOrders} />
     </Container>
   );
 };

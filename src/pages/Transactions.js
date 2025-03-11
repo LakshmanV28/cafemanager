@@ -1,24 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Container,
-  Card,
-  Form,
-  Row,
-  Col,
-  Button
-} from "react-bootstrap";
-import {
-  format,
-  parseISO,
-  isAfter,
-  isBefore,
-  isEqual
-} from "date-fns";
-import {
-  DayPicker
-} from "react-day-picker";
-import "react-day-picker/dist/style.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Container, Card, Form, Row, Col, Button } from "react-bootstrap";
+import { format, parseISO, isAfter, isBefore, isEqual } from "date-fns";
 
 const Transactions = () => {
   const [ordersByDate, setOrdersByDate] = useState({});
@@ -104,46 +89,55 @@ const Transactions = () => {
       <h2 className="text-center mb-4">Orders</h2>
 
       {/* Date Filters */}
-      <Row className="mb-3 text-center align-items-start">
+      <Row className="mb-3 text-center align-items-end">
         <Col>
           <Form.Label>Specific Date:</Form.Label>
-          <DayPicker
-            mode="single"
+          <DatePicker
             selected={selectedDate}
-            onSelect={(date) => {
+            onChange={(date) => {
               setSelectedDate(date);
               setStartDate(null);
               setEndDate(null);
             }}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            isClearable
+            placeholderText="Choose a specific date"
           />
         </Col>
 
         <Col>
           <Form.Label>Start Date:</Form.Label>
-          <DayPicker
-            mode="single"
+          <DatePicker
             selected={startDate}
-            onSelect={(date) => {
+            onChange={(date) => {
               setStartDate(date);
               setSelectedDate(null);
             }}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            isClearable
+            placeholderText="Start date"
           />
         </Col>
 
         <Col>
           <Form.Label>End Date:</Form.Label>
-          <DayPicker
-            mode="single"
+          <DatePicker
             selected={endDate}
-            onSelect={(date) => {
+            onChange={(date) => {
               setEndDate(date);
               setSelectedDate(null);
             }}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            isClearable
+            placeholderText="End date"
           />
         </Col>
 
         <Col xs="auto">
-          <Button variant="secondary" className="mt-4" onClick={clearAllFilters}>
+          <Button variant="secondary" onClick={clearAllFilters}>
             Clear Filters
           </Button>
         </Col>
