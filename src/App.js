@@ -26,8 +26,7 @@ export default function App() {
     <Router>
       <NavigationBar />
       <Routes>
-        <Route path="*" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
-        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="*" element={<Login setToken={setToken} />} />
 
         {/* Routes for Bill Counter */}
         {role === "Bill Counter" && (
