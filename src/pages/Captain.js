@@ -17,7 +17,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("https://cafemanager-2ji8.onrender.com/api/products");
+      const res = await axios.get("https://cashman-node.onrender.com/api/products");
       setCategories(res.data);
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -85,7 +85,7 @@ const Products = () => {
     };
 
     try {
-      await axios.post("https://cafemanager-2ji8.onrender.com/api/chef/add", orderData);
+      await axios.post("https://cashman-node.onrender.com/api/chef/add", orderData);
     // console.log(orderData);
     
       alert("Order Placed Successfully!");

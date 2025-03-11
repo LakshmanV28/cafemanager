@@ -19,7 +19,7 @@ const Inventory = () => {
 
     const fetchInventory = async () => {
         try {
-            const res = await axios.get("https://cafemanager-2ji8.onrender.com/api/auth/login/api/inventory");
+            const res = await axios.get("https://cashman-node.onrender.com/api/auth/login/api/inventory");
             setInventory(res.data);
             setFilteredInventory(res.data); // Initialize filtered data
         } catch (error) {
@@ -39,7 +39,7 @@ const Inventory = () => {
 
     const handleAddIngredient = async () => {
         try {
-            await axios.post("https://cafemanager-2ji8.onrender.com/api/inventory/add", newIngredient);
+            await axios.post("https://cashman-node.onrender.com/api/inventory/add", newIngredient);
             fetchInventory();
             setShowModal(false);
         } catch (error) {
@@ -50,7 +50,7 @@ const Inventory = () => {
     const handleDelete = async () => {
         if (!ingredientToDelete) return;
         try {
-            await axios.delete(`https://cafemanager-2ji8.onrender.com/api/inventory/delete/${ingredientToDelete}`);
+            await axios.delete(`https://cashman-node.onrender.com/api/inventory/delete/${ingredientToDelete}`);
             fetchInventory();
             setShowDeleteModal(false);
         } catch (error) {
@@ -61,7 +61,7 @@ const Inventory = () => {
     const handleUpdate = async () => {
         if (!selectedIngredient) return;
         try {
-            await axios.put(`https://cafemanager-2ji8.onrender.com/api/inventory/update/${selectedIngredient._id}`, selectedIngredient);
+            await axios.put(`https://cashman-node.onrender.com/api/inventory/update/${selectedIngredient._id}`, selectedIngredient);
             fetchInventory();
             setShowUpdateModal(false);
         } catch (error) {

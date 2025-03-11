@@ -19,7 +19,7 @@ export default function Login({ setToken }) {
     }
 
     try {
-      const res = await axios.post("https://cafemanager-2ji8.onrender.com/api/auth/login", { email, password });
+      const res = await axios.post("https://cashman-node.onrender.com/api/auth/login", { email, password });
       const { token } = res.data;
 
       localStorage.setItem("token", token); // Store JWT
