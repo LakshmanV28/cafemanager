@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import addSoundFile from "../assets/Notification-chime-sound-effect.mp3";
-import deleteSoundFile from "../assets/Notification-chime-sound-effect.mp3";
+import deleteSoundFile from "../assets/mixkit-wrong-long-buzzer-954.wav";
 
 const Chef = () => {
   const [orders, setOrders] = useState([]);

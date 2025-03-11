@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { Container, Table, Card, Form } from "react-bootstrap";
-import { format, parseISO, isWithinInterval, isSameDay } from "date-fns";
+import { Container, Table, Card, Row, Col, Button } from "react-bootstrap";
+import { format, parseISO, isWithinInterval } from "date-fns";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 
 const Dashboard = () => {
   const [ordersByDate, setOrdersByDate] = useState({});
@@ -35,7 +35,6 @@ const Dashboard = () => {
 
       orderList.forEach((order) => {
         totalRevenue += order.total;
-
         order.items.forEach((item) => {
           if (!productSales[item.name]) {
             productSales[item.name] = {
@@ -52,7 +51,9 @@ const Dashboard = () => {
 
       acc[formattedDate] = {
         totalRevenue,
-        topSellingProducts: Object.values(productSales).sort((a, b) => b.totalQuantitySold - a.totalQuantitySold),
+        topSellingProducts: Object.values(productSales).sort(
+          (a, b) => b.totalQuantitySold - a.totalQuantitySold
+        ),
       };
 
       return acc;
@@ -83,139 +84,128 @@ const Dashboard = () => {
 
     return {
       totalRevenue,
-      topSellingProducts: Object.values(productSales).sort((a, b) => b.totalQuantitySold - a.totalQuantitySold),
+      topSellingProducts: Object.values(productSales).sort(
+        (a, b) => b.totalQuantitySold - a.totalQuantitySold
+      ),
     };
   };
 
   const filterOrdersBySpecificDate = () => {
     if (!specificDate) return { totalRevenue: 0, topSellingProducts: [] };
-
-    const formattedDate = format(specificDate, "yyyy-MM-dd");
-    return ordersByDate[formattedDate] || { totalRevenue: 0, topSellingProducts: [] };
+    const formatted = format(specificDate, "yyyy-MM-dd");
+    return ordersByDate[formatted] || { totalRevenue: 0, topSellingProducts: [] };
   };
 
-  const filteredDataByRange = filterOrdersByDateRange();
-  const filteredDataByDate = filterOrdersBySpecificDate();
+  const filteredByDate = filterOrdersBySpecificDate();
+  const filteredByRange = filterOrdersByDateRange();
+
+  const clearFilters = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setSpecificDate(null);
+  };
 
   return (
     <Container className="mt-4">
       <h2 className="text-center mb-4">Dashboard</h2>
 
-      {/* Specific Date Picker */}
-      <Form.Group className="mb-3 text-center">
-        <Form.Label>Select Specific Date:</Form.Label>
-        <DatePicker
-          selected={specificDate}
-          onChange={(date) => setSpecificDate(date)}
-          dateFormat="yyyy-MM-dd"
-          className="form-control"
-          isClearable
-          placeholderText="Choose a date"
-        />
-      </Form.Group>
+      <Row className="mb-4 text-center">
+        <Col md={4}>
+          <h5>Select Specific Date</h5>
+          <DayPicker
+            mode="single"
+            selected={specificDate}
+            onSelect={(date) => {
+              setSpecificDate(date);
+              setStartDate(null);
+              setEndDate(null);
+            }}
+          />
+        </Col>
 
-      {/* Start Date Picker */}
-      <Form.Group className="mb-3 text-center">
-        <Form.Label>Select Start Date:</Form.Label>
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-          dateFormat="yyyy-MM-dd"
-          className="form-control"
-          isClearable
-          placeholderText="Choose a start date"
-        />
-      </Form.Group>
+        <Col md={4}>
+          <h5>Select Start Date</h5>
+          <DayPicker
+            mode="single"
+            selected={startDate}
+            onSelect={(date) => {
+              setStartDate(date);
+              setSpecificDate(null);
+            }}
+          />
+        </Col>
 
-      {/* End Date Picker */}
-      <Form.Group className="mb-3 text-center">
-        <Form.Label>Select End Date:</Form.Label>
-        <DatePicker
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}
-          dateFormat="yyyy-MM-dd"
-          className="form-control"
-          isClearable
-          placeholderText="Choose an end date"
-        />
-      </Form.Group>
+        <Col md={4}>
+          <h5>Select End Date</h5>
+          <DayPicker
+            mode="single"
+            selected={endDate}
+            onSelect={(date) => {
+              setEndDate(date);
+              setSpecificDate(null);
+            }}
+          />
+        </Col>
+      </Row>
 
-      {/* Specific Date Revenue */}
+      <div className="text-center mb-3">
+        <Button variant="secondary" onClick={clearFilters}>
+          Clear Filters
+        </Button>
+      </div>
+
       {specificDate && (
         <Card className="p-3 mb-4 text-center">
           <h4>
-            Total Revenue on {format(specificDate, "yyyy-MM-dd")}: ₹
-            {filteredDataByDate.totalRevenue.toFixed(2)}
+            Revenue on {format(specificDate, "yyyy-MM-dd")}: ₹
+            {filteredByDate.totalRevenue.toFixed(2)}
           </h4>
         </Card>
       )}
 
-      {/* Date Range Revenue */}
       {startDate && endDate && (
         <Card className="p-3 mb-4 text-center">
           <h4>
-            Total Revenue from {format(startDate, "yyyy-MM-dd")} to{" "}
-            {format(endDate, "yyyy-MM-dd")}: ₹{filteredDataByRange.totalRevenue.toFixed(2)}
+            Revenue from {format(startDate, "yyyy-MM-dd")} to{" "}
+            {format(endDate, "yyyy-MM-dd")}: ₹
+            {filteredByRange.totalRevenue.toFixed(2)}
           </h4>
         </Card>
       )}
 
-      {/* Top 5 Selling Products - Specific Date */}
-      {specificDate && (
+      {(specificDate || (startDate && endDate)) && (
         <>
-          <h3 className="mb-3">Top 5 Selling Products on {format(specificDate, "yyyy-MM-dd")}</h3>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Quantity Sold</th>
-                <th>Total Sales (₹)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredDataByDate.topSellingProducts.slice(0, 5).map((product, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{product.name}</td>
-                  <td>{product.category}</td>
-                  <td>{product.totalQuantitySold}</td>
-                  <td>₹{product.totalSales.toFixed(2)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </>
-      )}
-
-      {/* Top 5 Selling Products - Date Range */}
-      {startDate && endDate && (
-        <>
-          <h3 className="mb-3">
-            Top 5 Selling Products from {format(startDate, "yyyy-MM-dd")} to{" "}
-            {format(endDate, "yyyy-MM-dd")}
+          <h3 className="mb-3 text-center">
+            Top 5 Selling Products{" "}
+            {specificDate
+              ? `on ${format(specificDate, "yyyy-MM-dd")}`
+              : `from ${format(startDate, "yyyy-MM-dd")} to ${format(endDate, "yyyy-MM-dd")}`}
           </h3>
           <Table striped bordered hover>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Product Name</th>
+                <th>Product</th>
                 <th>Category</th>
-                <th>Quantity Sold</th>
-                <th>Total Sales (₹)</th>
+                <th>Quantity</th>
+                <th>Sales (₹)</th>
               </tr>
             </thead>
             <tbody>
-              {filteredDataByRange.topSellingProducts.slice(0, 5).map((product, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{product.name}</td>
-                  <td>{product.category}</td>
-                  <td>{product.totalQuantitySold}</td>
-                  <td>₹{product.totalSales.toFixed(2)}</td>
-                </tr>
-              ))}
+              {(specificDate
+                ? filteredByDate.topSellingProducts
+                : filteredByRange.topSellingProducts
+              )
+                .slice(0, 5)
+                .map((product, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{product.name}</td>
+                    <td>{product.category}</td>
+                    <td>{product.totalQuantitySold}</td>
+                    <td>₹{product.totalSales.toFixed(2)}</td>
+                  </tr>
+                ))}
             </tbody>
           </Table>
         </>
