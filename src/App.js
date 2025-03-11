@@ -42,13 +42,8 @@ function AppRoutes({ token, email, setToken }) {
           element={token ? <Navigate to={getRedirectPath(email)} replace /> : <Login setToken={setToken} />}
         />
 
-<<<<<<< HEAD
-        {/* Routes for Bill Counter */}
-        {role === "Admin" && (
-=======
         {/* Admin Routes */}
         {email.toLowerCase() === "admin@cafe.com" && token && (
->>>>>>> ce61d99ff77b57542c01fad6802f8a95e8b97e89
           <>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />

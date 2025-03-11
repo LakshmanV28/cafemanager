@@ -22,18 +22,6 @@ export default function NavigationBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-<<<<<<< HEAD
-            {/* Show navigation links based on role */}
-            {token && role === "Admin" && (
-              <>
-                <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
-                <Nav.Link as={Link} to="/transactions">Transactions</Nav.Link>
-                <Nav.Link as={Link} to="/closing">Closing</Nav.Link>                
-                <Nav.Link as={Link} to="/billcounter">Bill Counter</Nav.Link>
-                <Nav.Link as={Link} to="/inventory">Inventory</Nav.Link>
-              </>
-            )}
-=======
             {token && email && (
               <>
                 {/* Admin Navigation (if email contains 'admin') */}
@@ -59,7 +47,6 @@ export default function NavigationBar() {
                     </Nav.Link>
                   </>
                 )}
->>>>>>> ce61d99ff77b57542c01fad6802f8a95e8b97e89
 
                 {/* Captain Navigation (if email contains 'captain') */}
                 {email.toLowerCase().includes("captain") && (
@@ -73,14 +60,6 @@ export default function NavigationBar() {
                   </>
                 )}
 
-<<<<<<< HEAD
-            {token && role === "Chef" && (
-              <>
-                <Nav.Link as={Link} to="/chef">Chef</Nav.Link>
-                <Nav.Link as={Link} to="/reciepe">Recipe</Nav.Link>
-              </>
-            )}
-=======
                 {/* Chef Navigation (if email contains 'chef') */}
                 {email.toLowerCase().includes("chef") && (
                   <>
@@ -89,7 +68,6 @@ export default function NavigationBar() {
                     </Nav.Link>
                   </>
                 )}
->>>>>>> ce61d99ff77b57542c01fad6802f8a95e8b97e89
 
                 {/* Logout button */}
                 <Nav.Link onClick={handleLogout} style={{ cursor: "pointer" }}>

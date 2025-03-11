@@ -25,13 +25,8 @@ export default function Login({ setToken }) {
       localStorage.setItem("email", email); // ✅ Store email in localStorage
       setToken(token);
 
-<<<<<<< HEAD
-      // Redirect based on role
-      if (role === "Admin") {
-=======
       // Redirect based on email
       if (email.toLowerCase() === "admin@cafe.com") {
->>>>>>> ce61d99ff77b57542c01fad6802f8a95e8b97e89
         navigate("/dashboard");
       } else if (email.toLowerCase() === "captain@cafe.com") {
         navigate("/captain");
@@ -74,22 +69,6 @@ export default function Login({ setToken }) {
               />
             </Form.Group>
 
-<<<<<<< HEAD
-            {/* Role Selection */}
-            <div className="mb-3 d-flex justify-content-around">
-              <Button variant={role === "Admin" ? "primary" : "secondary"} onClick={() => setRole("Admin")}>
-                Admin
-              </Button>
-              <Button variant={role === "Captain" ? "primary" : "secondary"} onClick={() => setRole("Captain")}>
-                Captain
-              </Button>
-              <Button variant={role === "Chef" ? "primary" : "secondary"} onClick={() => setRole("Chef")}>
-                Chef
-              </Button>
-            </div>
-
-=======
->>>>>>> ce61d99ff77b57542c01fad6802f8a95e8b97e89
             <Button type="submit" variant="primary" className="w-100">
               Login
             </Button>
