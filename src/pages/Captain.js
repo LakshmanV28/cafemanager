@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Row, Col, Card, Button, Form, Offcanvas, Modal } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  Offcanvas,
+  Modal,
+} from "react-bootstrap";
 
 const Products = () => {
   const [categories, setCategories] = useState([]);
@@ -8,8 +17,7 @@ const Products = () => {
   const [cart, setCart] = useState([]);
   const [tableNo, setTableNo] = useState("");
   const [showCart, setShowCart] = useState(false);
-  const [showAddProductModal, setShowAddProductModal] = useState(false);
-  const [newProduct, setNewProduct] = useState({ name: "", category: "" });
+  const [showCommentBox, setShowCommentBox] = useState({});
 
   useEffect(() => {
     fetchProducts();
@@ -17,11 +25,20 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("https://cashman-node.onrender.com/api/products");
+      const res = await axios.get(
+        "https://cashman-node.onrender.com/api/products"
+      );
       setCategories(res.data);
     } catch (err) {
       console.error("Error fetching products:", err);
     }
+  };
+
+  const toggleCommentBox = (productName) => {
+    setShowCommentBox((prev) => ({
+      ...prev,
+      [productName]: !prev[productName],
+    }));
   };
 
   const updateQuantity = (product, amount, categoryName) => {
@@ -36,7 +53,10 @@ const Products = () => {
           )
           .filter((item) => item.quantity > 0);
       } else if (amount > 0) {
-        return [...prevCart, { ...product, category: categoryName, quantity: 1, comment: "" }];
+        return [
+          ...prevCart,
+          { ...product, category: categoryName, quantity: 1, comment: "" },
+        ];
       }
       return prevCart;
     });
@@ -49,11 +69,21 @@ const Products = () => {
       if (existingItem) {
         return prevCart
           .map((item) =>
-            item.name === product.name ? { ...item, quantity: newQuantity } : item
+            item.name === product.name
+              ? { ...item, quantity: newQuantity }
+              : item
           )
           .filter((item) => item.quantity > 0);
       } else if (newQuantity > 0) {
-        return [...prevCart, { ...product, category: categoryName, quantity: newQuantity, comment: "" }];
+        return [
+          ...prevCart,
+          {
+            ...product,
+            category: categoryName,
+            quantity: newQuantity,
+            comment: "",
+          },
+        ];
       }
       return prevCart;
     });
@@ -70,7 +100,7 @@ const Products = () => {
 
   const placeOrder = async () => {
     if (!tableNo) {
-      alert("Please enter table number!");
+      alert("Please select a table!");
       return;
     }
 
@@ -85,12 +115,14 @@ const Products = () => {
     };
 
     try {
-      await axios.post("https://cashman-node.onrender.com/api/chef/add", orderData);
-    // console.log(orderData);
-    
+      await axios.post(
+        "https://cashman-node.onrender.com/api/chef/add",
+        orderData
+      );
       alert("Order Placed Successfully!");
-      setCart([]); // Clear cart after placing order
+      setCart([]);
       setShowCart(false);
+      setTableNo("");
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -109,6 +141,8 @@ const Products = () => {
       ),
     }))
     .filter((category) => category.products.length > 0);
+
+  const tableButtons = Array.from({ length: 8 }, (_, i) => i + 1);
 
   return (
     <Container className="mt-4">
@@ -132,8 +166,29 @@ const Products = () => {
             <h3 className="text-center">{categoryData.category}</h3>
             <Row>
               {categoryData.products.map((product) => (
-                <Col key={product._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
-                  <Card className="shadow-lg p-3 bg-white rounded">
+                <Col
+                  key={product._id}
+                  sm={12}
+                  md={6}
+                  lg={4}
+                  xl={3}
+                  className="mb-4"
+                >
+                  <Card className="shadow-lg p-3 bg-white rounded position-relative">
+                    <Button
+                      variant="outline-dark"
+                      size="sm"
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                      }}
+                      title="Cooking Instructions..."
+                      onClick={() => toggleCommentBox(product.name)}
+                    >
+                      📝
+                    </Button>
+
                     <Card.Body>
                       <Card.Title>{product.name || "No Name"}</Card.Title>
 
@@ -141,35 +196,47 @@ const Products = () => {
                       <div className="d-flex align-items-center">
                         <Button
                           variant="danger"
-                          id={`decrease-${product._id}`}
-                          onClick={() => updateQuantity(product, -1, categoryData.category)}
+                          onClick={() =>
+                            updateQuantity(product, -1, categoryData.category)
+                          }
                         >
                           -
                         </Button>
                         <Form.Control
                           type="number"
-                          id={`quantity-${product._id}`}
                           className="text-center mx-2"
                           value={getProductQuantity(product.name)}
-                          onChange={(e) => handleQuantityChange(product, e, categoryData.category)}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              product,
+                              e,
+                              categoryData.category
+                            )
+                          }
                         />
                         <Button
                           variant="success"
-                          id={`increase-${product._id}`}
-                          onClick={() => updateQuantity(product, 1, categoryData.category)}
+                          onClick={() =>
+                            updateQuantity(product, 1, categoryData.category)
+                          }
                         >
                           +
                         </Button>
                       </div>
 
-                      {/* Comment Feature */}
-                      <Form.Control
-                        className="mt-2"
-                        type="text"
-                        placeholder="Add a comment..."
-                        value={cart.find((item) => item.name === product.name)?.comment || ""}
-                        onChange={(e) => handleCommentChange(product.name, e)}
-                      />
+                      {/* Conditionally shown Comment Input */}
+                      {showCommentBox[product.name] && (
+                        <Form.Control
+                          className="mt-2"
+                          type="text"
+                          placeholder="Cooking Instructions..."
+                          value={
+                            cart.find((item) => item.name === product.name)
+                              ?.comment || ""
+                          }
+                          onChange={(e) => handleCommentChange(product.name, e)}
+                        />
+                      )}
                     </Card.Body>
                   </Card>
                 </Col>
@@ -183,26 +250,38 @@ const Products = () => {
       {cart.length > 0 && (
         <div className="text-center mt-4">
           <Button variant="primary" size="lg" onClick={() => setShowCart(true)}>
-            View Cart ({cart.reduce((total, item) => total + item.quantity, 0)} items)
+            View Cart ({cart.reduce((total, item) => total + item.quantity, 0)}{" "}
+            items)
           </Button>
         </div>
       )}
 
       {/* 🛒 Offcanvas for Cart */}
-      <Offcanvas show={showCart} onHide={() => setShowCart(false)} placement="end">
+      <Offcanvas
+        show={showCart}
+        onHide={() => setShowCart(false)}
+        placement="end"
+      >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Your Order</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>Table No:</Form.Label>
-            <Form.Control
-              type="text"
-              value={tableNo}
-              onChange={(e) => setTableNo(e.target.value)}
-              placeholder="Enter Table No."
-            />
-          </Form.Group>
+          <div className="mb-3">
+            <strong>Select Table:</strong>
+            <div className="d-flex flex-wrap mt-2 gap-2">
+              {tableButtons.map((num) => (
+                <Button
+                  key={num}
+                  variant="dark"
+                  className="w-25"
+                
+                  onClick={() => setTableNo(`Table ${num}`)}
+                >
+                  Table {num}
+                </Button>
+              ))}
+            </div>
+          </div>
 
           {cart.map((item, index) => (
             <div key={index} className="mb-3">
@@ -211,7 +290,6 @@ const Products = () => {
             </div>
           ))}
 
-          {/* Place Order Button */}
           <Button variant="success" size="lg" onClick={placeOrder}>
             Place Order
           </Button>
