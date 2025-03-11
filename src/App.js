@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import NavigationBar from "./components/Navbar";
+import axios from "axios";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
@@ -14,80 +15,78 @@ import Chef from "./pages/Chef";
 import EditOrder from "./pages/EditOrders";
 import BillCounter from "./pages/BillCounter";
 
-// Separate component to handle routes and location
-function AppRoutes({ token, email, setToken }) {
-  const location = useLocation(); // Now correctly used inside Router
-  const isLoginPage = location.pathname === "/";
+const App = () => {
+  const [user, setUser] = useState(null);
 
-  const getRedirectPath = (email) => {
-    switch (email.toLowerCase()) {
-      case "admin@cafe.com":
-        return "/dashboard";
-      case "captain@cafe.com":
-        return "/captain";
-      case "chef@cafe.com":
-        return "/chef";
-      default:
-        return "/";
-    }
+  useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+          setUser(JSON.parse(storedUser));
+      }
+  }, []);
+
+  const handleLogin = async (email, password) => {
+      try {
+          const response = await axios.post("https://cashman-node.onrender.com/api/auth/login", { email, password });
+          const { token, role, name } = response.data;
+
+          localStorage.setItem("user", JSON.stringify({ token, role, name }));
+          setUser({ token, role, name });
+      } catch (error) {
+          alert("Invalid credentials");
+      }
+  };
+
+  const handleLogout = () => {
+      localStorage.removeItem("user");
+      setUser(null);
   };
 
   return (
-    <>
-      {!isLoginPage && token && <NavigationBar />}
-      <Routes>
-        {/* Login Route */}
-        <Route
-          path="/"
-          element={token ? <Navigate to={getRedirectPath(email)} replace /> : <Login setToken={setToken} />}
-        />
+      <Router>
+          <NavigationBar user={user} onLogout={handleLogout} />
+          <div className="container mt-4">
+              {user ? (
+                  <Routes>
+                      {/* Admin Routes */}
+                      {user.role === "admin" && (
+                          <>
+                              <Route path="/dashboard" element={<Dashboard />} />
+                              <Route path="/transactions" element={<Transactions />} />
+                              <Route path="/closing" element={<Closing />} />
+                              <Route path="/billcounter" element={<BillCounter />} />
+                              <Route path="/inventory" element={<Inventory />} />
+                              <Route path="*" element={<Navigate to="/dashboard" />} />
+                          </>
+                      )}
 
-        {/* Admin Routes */}
-        {email.toLowerCase() === "admin@cafe.com" && token && (
-          <>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/closing" element={<Closing />} />
-            <Route path="/reciepe" element={<Reciepe />} />
-            <Route path="/billcounter" element={<BillCounter />} />
-            <Route path="/inventory" element={<Inventory />} />
-          </>
-        )}
+                      {/* Captain Routes */}
+                      {user.role === "captain" && (
+                          <>
+                              <Route path="/captain" element={<Captain />} />
+                              <Route path="/editorders" element={<EditOrder />} />
+                              <Route path="*" element={<Navigate to="/captain" />} />
+                          </>
+                      )}
 
-        {/* Captain Routes */}
-        {email.toLowerCase() === "captain@cafe.com" && token && (
-          <>
-            <Route path="/captain" element={<Captain />} />
-            <Route path="/editorders" element={<EditOrder />} />
-          </>
-        )}
-
-        {/* Chef Routes */}
-        {email.toLowerCase() === "chef@cafe.com" && token && (
-          <>
-            <Route path="/chef" element={<Chef />} />
-          </>
-        )}
-
-        {/* Catch-all for unauthorized or unknown routes */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
+                      {/* Chef Routes */}
+                      {user.role === "chef" && (
+                          <>
+                              <Route path="/chef" element={<Chef />} />
+                              <Route path="/reciepe" element={<Reciepe />} />
+                              <Route path="*" element={<Navigate to="/chef" />} />
+                          </>
+                      )}
+                  </Routes>
+              ) : (
+                  <Routes>
+                      <Route path="/" element={<Login onLogin={handleLogin} />} />
+                      <Route path="*" element={<Navigate to="/" />} />
+                  </Routes>
+              )}
+          </div>
+      </Router>
   );
-}
+};
 
-export default function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [email, setEmail] = useState(localStorage.getItem("email") || "");
-
-  useEffect(() => {
-    setEmail(localStorage.getItem("email") || "");
-    setToken(localStorage.getItem("token"));
-  }, [token]);
-
-  return (
-    <Router>
-      <AppRoutes token={token} email={email} setToken={setToken} />
-    </Router>
-  );
-}
+export default App;
