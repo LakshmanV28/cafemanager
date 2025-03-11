@@ -11,7 +11,7 @@ const Login = ({ onLogin }) => {
     };
 
     return (
-        <Container className="d-flex justify-content-center align-items-center vh-100">
+        <Container className="d-flex justify-content-center align-items-center">
             <Card className="p-4 shadow-lg" style={{ width: "22rem" }}>
                 <Card.Body>
                     <h2 className="text-center mb-4">Login</h2>
