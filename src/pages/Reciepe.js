@@ -23,7 +23,7 @@ const RecipeList = () => {
 
   const fetchRecipes = () => {
     axios
-      .get("https://cashman-node.onrender.com/api/reciepes")
+      .get("https://cafemanager-2ji8.onrender.com/api/reciepes")
       .then((response) => setRecipes(response.data))
       .catch((error) => console.error("Error fetching recipes:", error));
   };
@@ -47,7 +47,7 @@ const RecipeList = () => {
 
   const addNewRecipe = () => {
     axios
-      .post("https://cashman-node.onrender.com/api/reciepes/add", newRecipe)
+      .post("https://cafemanager-2ji8.onrender.com/api/reciepes/add", newRecipe)
       .then(() => {
         fetchRecipes();
         setShowAddRecipeModal(false);
@@ -64,7 +64,7 @@ const RecipeList = () => {
     const updatedRecipe = { ...selectedRecipe, ingredients: updatedIngredients };
 
     axios
-      .put(`https://cashman-node.onrender.com/api/reciepes/update/${selectedRecipe._id}`, updatedRecipe)
+      .put(`https://cafemanager-2ji8.onrender.com/api/reciepes/update/${selectedRecipe._id}`, updatedRecipe)
       .then(() => {
         fetchRecipes();
         setShowUpdateModal(false);
@@ -75,7 +75,7 @@ const RecipeList = () => {
 
   const deleteRecipe = () => {
     axios
-      .delete(`https://cashman-node.onrender.com/api/reciepes/delete/${selectedRecipe._id}`)
+      .delete(`https://cafemanager-2ji8.onrender.com/api/reciepes/delete/${selectedRecipe._id}`)
       .then(() => {
         fetchRecipes();
         setShowDeleteRecipeModal(false);
@@ -111,7 +111,7 @@ const RecipeList = () => {
     };
 
     axios
-      .put(`https://cashman-node.onrender.com/api/reciepes/update/${selectedRecipe._id}`, updatedRecipe)
+      .put(`https://cafemanager-2ji8.onrender.com/api/reciepes/update/${selectedRecipe._id}`, updatedRecipe)
       .then(() => {
         fetchRecipes();
         setShowAddModal(false);
@@ -128,7 +128,7 @@ const RecipeList = () => {
     const updatedRecipe = { ...selectedRecipe, ingredients: updatedIngredients };
 
     axios
-      .put(`https://cashman-node.onrender.com/api/reciepes/update/${selectedRecipe._id}`, updatedRecipe)
+      .put(`https://cafemanager-2ji8.onrender.com/api/reciepes/update/${selectedRecipe._id}`, updatedRecipe)
       .then(() => {
         fetchRecipes();
         setShowDeleteModal(false);

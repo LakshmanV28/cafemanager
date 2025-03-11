@@ -22,7 +22,7 @@ const Closing = () => {
 
     const fetchInventory = async () => {
         try {
-            const res = await axios.get("https://cashman-node.onrender.com/api/inventory");
+            const res = await axios.get("https://cafemanager-2ji8.onrender.com/api/inventory");
             
             setInventory(res.data);
         } catch (error) {
@@ -32,7 +32,7 @@ const Closing = () => {
 
     const fetchRecipes = async () => {
         try {
-            const res = await axios.get("https://cashman-node.onrender.com/api/reciepes");                        
+            const res = await axios.get("https://cafemanager-2ji8.onrender.com/api/reciepes");                        
             setRecipes(res.data);
         } catch (error) {
             console.error("Error fetching recipes:", error);
@@ -41,7 +41,7 @@ const Closing = () => {
 
     const fetchOrders = async () => {
         try {
-            const res = await axios.get("https://cashman-node.onrender.com/api/orders");
+            const res = await axios.get("https://cafemanager-2ji8.onrender.com/api/orders");
     
             let allOrders = [];
     

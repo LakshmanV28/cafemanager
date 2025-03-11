@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Products from "./pages/Products";
 import Inventory from "./pages/Inventory";
 import Reciepe from "./pages/Reciepe";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Closing from "./pages/Closing";
 import Captain from "./pages/Captain";
 import Chef from "./pages/Chef";
@@ -16,25 +16,46 @@ import BillCounter from "./pages/BillCounter";
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role"));
+
+  useEffect(() => {
+    setRole(localStorage.getItem("role"));
+  }, [token]);
+
   return (
     <Router>
       <NavigationBar />
       <Routes>
-        <Route path="*" element={token ? <Products /> : <Navigate to="/login" />} />
+        <Route path="*" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
-        <Route path="/dashboard" element={token ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/products" element={token ? <Products /> : <Navigate to="/login" />} />
-        <Route path="/transactions" element={token ? <Transactions /> : <Navigate to="/login" />} />
-        <Route path="/inventory" element={token ? <Inventory /> : <Navigate to="/login" />} />
-        <Route path="/closing" element={token ? <Closing /> : <Navigate to="/login" />} />
-        <Route path="/reciepe" element={token ? <Reciepe /> : <Navigate to="/login" />} />
-        <Route path="/captain" element={token ? <Captain /> : <Navigate to="/login" />} />
-        <Route path="/chef" element={token ? <Chef /> : <Navigate to="/login" />} />
-        <Route path="/editorders" element={token ? <EditOrder /> : <Navigate to="/login" />} />
-        <Route path="/billcounter" element={token ? <BillCounter /> : <Navigate to="/login" />} />
 
+        {/* Routes for Bill Counter */}
+        {role === "Bill Counter" && (
+          <>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/closing" element={<Closing />} />
+            <Route path="/reciepe" element={<Reciepe />} />
+            <Route path="/billcounter" element={<BillCounter />} />
+            <Route path="/inventory" element={<Inventory />} />
+          </>
+        )}
+
+        {/* Routes for Captain */}
+        {role === "Captain" && (
+          <>
+            <Route path="/captain" element={<Captain />} />
+            <Route path="/editorders" element={<EditOrder />} />
+          </>
+        )}
+
+        {/* Routes for Chef */}
+        {role === "Chef" && (
+          <>
+            <Route path="/chef" element={<Chef />} />
+          </>
+        )}
       </Routes>
     </Router>
   );
 }
-

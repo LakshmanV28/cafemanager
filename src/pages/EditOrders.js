@@ -35,7 +35,7 @@ const EditOrder = () => {
     // ✅ Fetch orders correctly
     const fetchOrders = async () => {
         try {
-            const response = await axios.get("https://cashman-node.onrender.com/api/editorders");
+            const response = await axios.get("https://cafemanager-2ji8.onrender.com/api/auth/login/api/editorders");
             setOrders(response.data || []); // Ensure orders is always an array
         } catch (error) {
             console.error("Error fetching orders:", error);
@@ -45,7 +45,7 @@ const EditOrder = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get("https://cashman-node.onrender.com/api/products");
+            const response = await axios.get("https://cafemanager-2ji8.onrender.com/api/products");
             setProducts(response.data || []); // Ensure it's always an array
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -61,7 +61,7 @@ const EditOrder = () => {
         }
         try {
             const response = await axios.post(
-                `https://cashman-node.onrender.com/api/editorders/add-item/${newItem.orderId}`,
+                `https://cafemanager-2ji8.onrender.com/api/editorders/add-item/${newItem.orderId}`,
                 newItem
             );
             setOrders((prevOrders) =>
@@ -84,7 +84,7 @@ const EditOrder = () => {
     const handleUpdateItem = async (orderId, itemId, qty, comment) => {
         try {
             const response = await axios.put(
-                `https://cashman-node.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
+                `https://cafemanager-2ji8.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
                 { qty, comment }
             );
             setOrders((prevOrders) =>
@@ -106,7 +106,7 @@ const EditOrder = () => {
         try {
             const { orderId, itemId } = deleteItemData;
             const response = await axios.delete(
-                `https://cashman-node.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
+                `https://cafemanager-2ji8.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
             );
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>

@@ -13,7 +13,7 @@ const Chef = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("https://cashman-node.onrender.com/api/chef");
+      const response = await axios.get("https://cafemanager-2ji8.onrender.com/api/chef");
       setOrders(response.data);
     } catch (error) {
       console.error("Error fetching orders:", error);

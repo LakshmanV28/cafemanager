@@ -12,7 +12,7 @@ const BillCounter = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get("https://cashman-node.onrender.com/api/billcounter/orders");
+            const response = await axios.get("https://cafemanager-2ji8.onrender.com/api/billcounter/orders");
             setOrders(response.data);
         } catch (error) {
             console.error("Error fetching orders:", error);
@@ -37,10 +37,10 @@ const BillCounter = () => {
             };
 
             // ✅ Post data to cart
-            await axios.post("https://cashman-node.onrender.com/api/cart/add", cartData);
+            await axios.post("https://cafemanager-2ji8.onrender.com/api/cart/add", cartData);
 
             // ✅ Remove the order from the database after checkout
-            await axios.delete(`https://cashman-node.onrender.com/api/billcounter/orders/${order._id}`);
+            await axios.delete(`https://cafemanager-2ji8.onrender.com/api/billcounter/orders/${order._id}`);
 
             alert(`Table ${order.tableNo} checked out successfully!`);
 
