@@ -81,6 +81,17 @@ router.delete("/delete-item/:orderId/:itemId", async (req, res) => {
   }
 });
 
+router.delete('/delete-order/:orderId', async (req, res) => {
+  try {
+      const { orderId } = req.params;
+      await Order.findByIdAndDelete(orderId);
+      res.json({ message: "Order deleted successfully" });
+  } catch (error) {
+      res.status(500).json({ error: "Failed to delete order" });
+  }
+});
+
+
 // Checkout an order
 router.post("/checkout/:orderId", async (req, res) => {
   const { orderId } = req.params;

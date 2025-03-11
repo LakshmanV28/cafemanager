@@ -107,7 +107,7 @@ const BillCounter = () => {
                                             className="mt-3"
                                             onClick={() => handleCheckout(order)}
                                         >
-                                            Paid {order.tableNo}
+                                            Table: {order.tableNo} Paid
                                         </Button>
                                     </Card.Body>
                                 </Card>

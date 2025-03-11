@@ -34,7 +34,7 @@ const NavBar = ({ user, onLogout }) => {
                         {user && user.role === "chef" && (
                             <>
                                 <Nav.Link as={Link} to="/chef">Chef</Nav.Link>
-                                <Nav.Link as={Link} to="/recipe">Recipe</Nav.Link>
+                                <Nav.Link as={Link} to="/reciepe">Recipe</Nav.Link>
                             </>
                         )}
                     </Nav>
