@@ -79,7 +79,7 @@ const Chef = () => {
             <Col key={order._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
               <Card className="shadow-lg p-3 bg-white rounded">
                 <Card.Body>
-                  <Card.Title>Table {order.tableNo}</Card.Title>
+                  <Card.Title>{order.tableNo}</Card.Title>
                   {order.items.map((item) => (
                     <Card.Text
                       key={item._id}

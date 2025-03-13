@@ -8,7 +8,8 @@ const OrderSchema = new mongoose.Schema({
       {
         name: { type: String, required: true },
         qty: { type: Number, required: true },
-        comment: { type: String, default: "" }                  ////onrender? Deployed
+        comment: { type: String, default: "" },
+        status: {type:String}
       }
     ],  
     orderTime: { type: Date, default: Date.now }

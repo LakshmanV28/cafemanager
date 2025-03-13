@@ -30,7 +30,7 @@ router.get("/:orderId", async (req, res) => {
 // Add an item to an order
 router.post("/add-item/:orderId", async (req, res) => {
   const { orderId } = req.params;
-  const { name, qty, comment } = req.body;
+  const { name, qty, comment, status } = req.body;
 
   try {
     let order = await Order.findById(orderId);
@@ -45,9 +45,9 @@ router.post("/add-item/:orderId", async (req, res) => {
 });
 
 // Update an item in an order
-router.put("/update-item/:orderId/:itemId", async (req, res) => {
+router.post("/update-item/:orderId/:itemId", async (req, res) => {
   const { orderId, itemId } = req.params;
-  const { qty, comment } = req.body;
+  const { qty, comment, status } = req.body;
 
   try {
     let order = await Order.findById(orderId);
@@ -58,6 +58,7 @@ router.put("/update-item/:orderId/:itemId", async (req, res) => {
 
     item.qty = qty;
     item.comment = comment;
+    item.status = "added"
     await order.save();
     res.json({ message: "Item updated successfully", order });
   } catch (error) {
@@ -66,7 +67,7 @@ router.put("/update-item/:orderId/:itemId", async (req, res) => {
 });
 
 // Delete an item from an order
-router.put("/delete-item/:orderId/:itemId", async (req, res) => {
+router.post("/delete-item/:orderId/:itemId", async (req, res) => {
   const { orderId, itemId } = req.params;
 
   try {
@@ -93,6 +94,7 @@ router.put("/delete-item/:orderId/:itemId", async (req, res) => {
     res.status(500).json({ message: "Error updating item status", error });
   }
 });
+
 
 router.delete('/delete-order/:orderId', async (req, res) => {
   try {

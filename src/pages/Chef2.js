@@ -124,7 +124,7 @@ const Chef = () => {
                 }}
               >
                 <Card.Body>
-                  <Card.Title>Table {order.tableNo}</Card.Title>
+                  <Card.Title>{order.tableNo}</Card.Title>
                   {order.items.map((item) => (
                     <Card.Text key={item._id}>
                       <strong>Name:</strong> {item.name} <br />
