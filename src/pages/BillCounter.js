@@ -13,11 +13,21 @@ const BillCounter = () => {
     const fetchOrders = async () => {
         try {
             const response = await axios.get("https://cashman-node.onrender.com/api/billcounter/orders");
-            setOrders(response.data);
+    
+            // Filter out deleted items but keep the order if it has non-deleted items
+            const filteredOrders = response.data
+                .map(order => ({
+                    ...order,
+                    items: order.items.filter(item => item.status !== "deleted"), // Exclude deleted items
+                }))
+                .filter(order => order.items.length > 0); // Remove orders with no remaining items
+    
+            setOrders(filteredOrders);
         } catch (error) {
             console.error("Error fetching orders:", error);
         }
     };
+    
 
     const handleCheckout = async (order) => {
         try {

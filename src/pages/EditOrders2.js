@@ -10,7 +10,7 @@ import {
   Col,
 } from "react-bootstrap";
 
-const EditOrders = () => {
+const EditOrder = () => {
   const [orders, setOrders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -23,7 +23,6 @@ const EditOrders = () => {
     qty: 1,
     comment: "",
     orderId: "",
-    
   });
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,20 +49,15 @@ const EditOrders = () => {
 
   const fetchOrders = async () => {
     try {
-        const response = await axios.get("https://cashman-node.onrender.com/api/editorders");
-
-        const filteredOrders = (response.data || []).map(order => ({
-            ...order,
-            items: order.items.filter(item => item.status !== "deleted"), // Exclude deleted items
-        })).filter(order => order.items.length > 0); // Remove orders with no remaining items
-
-        setOrders(filteredOrders);
+      const response = await axios.get(
+        "https://cashman-node.onrender.com/api/editorders"
+      );
+      setOrders(response.data || []);
     } catch (error) {
-        console.error("Error fetching orders:", error);
-        setOrders([]);
+      console.error("Error fetching orders:", error);
+      setOrders([]);
     }
-};
-
+  };
 
   const fetchProducts = async () => {
     try {
@@ -93,7 +87,7 @@ const EditOrders = () => {
         )
       );
       setShowModal(false);
-      setNewItem({ name: "", qty: 1, comment: "",orderId: "" });
+      setNewItem({ name: "", qty: 1, comment: "", orderId: "" });
       setSearchTerm("");
     } catch (error) {
       console.error("Error adding item:", error);
@@ -109,7 +103,7 @@ const EditOrders = () => {
     try {
       const response = await axios.put(
         `https://cashman-node.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
-        { qty, comment}
+        { qty, comment }
       );
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
@@ -125,34 +119,23 @@ const EditOrders = () => {
     setDeleteItemData({ orderId, itemId });
     setShowDeleteModal(true);
   };
+
   const handleDeleteItem = async () => {
     try {
-        const { orderId, itemId } = deleteItemData;
-        const response = await axios.post(
-            `https://cashman-node.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
-        );
-
-        setOrders((prevOrders) =>
-            prevOrders
-                .map((order) =>
-                    order._id === orderId
-                        ? {
-                            ...order,
-                            items: order.items
-                                .filter(item => item._id !== itemId && item.status !== "deleted") // Remove deleted items
-                        }
-                        : order
-                )
-                .filter(order => order.items.length > 0) // Remove empty orders
-        );
-
-        setShowDeleteModal(false);
+      const { orderId, itemId } = deleteItemData;
+      const response = await axios.delete(
+        `https://cashman-node.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
+      );
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? response.data.order : order
+        )
+      );
+      setShowDeleteModal(false);
     } catch (error) {
-        console.error("Error deleting item:", error);
+      console.error("Error deleting item:", error);
     }
-};
-
-
+  };
 
   return (
     <Container className="mt-4">
@@ -345,4 +328,4 @@ const EditOrders = () => {
   );
 };
 
-export default EditOrders;
+export default EditOrder;

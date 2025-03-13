@@ -36,7 +36,7 @@ router.post("/add-item/:orderId", async (req, res) => {
     let order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    order.items.push({ name, qty, comment });
+    order.items.push({ name, qty, comment, status:"added" });
     await order.save();
     res.json({ message: "Item added successfully", order });
   } catch (error) {
@@ -66,18 +66,31 @@ router.put("/update-item/:orderId/:itemId", async (req, res) => {
 });
 
 // Delete an item from an order
-router.delete("/delete-item/:orderId/:itemId", async (req, res) => {
+router.put("/delete-item/:orderId/:itemId", async (req, res) => {
   const { orderId, itemId } = req.params;
 
   try {
     let order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    order.items = order.items.filter((item) => item._id.toString() !== itemId);
+    // Find and update the item's status
+    let itemUpdated = false;
+    order.items = order.items.map((item) => {
+      if (item._id.toString() === itemId) {
+        item.status = "deleted"; // Update status
+        itemUpdated = true;
+      }
+      return item;
+    });
+
+    if (!itemUpdated) {
+      return res.status(404).json({ message: "Item not found in order" });
+    }
+
     await order.save();
-    res.json({ message: "Item deleted successfully", order });
+    res.json({ message: "Item status updated to deleted", order });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting item", error });
+    res.status(500).json({ message: "Error updating item status", error });
   }
 });
 
