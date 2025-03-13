@@ -5,9 +5,28 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Container, Table, Card, Form, Row, Col } from "react-bootstrap";
 import { format, parseISO, isWithinInterval } from "date-fns";
 import { Bar, Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement
+);
 
 const Dashboard = () => {
   const [ordersByDate, setOrdersByDate] = useState({});
@@ -22,10 +41,17 @@ const Dashboard = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("https://cashman-node.onrender.com/api/orders");
+      const response = await axios.get(
+        "https://cashman-node.onrender.com/api/orders"
+      );
       const groupedData = groupByDate(response.data);
       setOrdersByDate(groupedData);
-      setTotalRevenue(Object.values(groupedData).reduce((acc, data) => acc + data.totalRevenue, 0));
+      setTotalRevenue(
+        Object.values(groupedData).reduce(
+          (acc, data) => acc + data.totalRevenue,
+          0
+        )
+      );
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -36,9 +62,10 @@ const Dashboard = () => {
 
     return Object.entries(orders).reduce((acc, [date, orderList]) => {
       const formattedDate = format(parseISO(date), "yyyy-MM-dd");
-      let totalRevenue = 0, totalOrders = orderList.length;
+      let totalRevenue = 0,
+        totalOrders = orderList.length;
       let productSales = {};
-      
+
       orderList.forEach((order) => {
         totalRevenue += order.total;
         order.items.forEach((item) => {
@@ -58,7 +85,9 @@ const Dashboard = () => {
       acc[formattedDate] = {
         totalRevenue,
         totalOrders,
-        topSellingProducts: Object.values(productSales).sort((a, b) => b.totalQuantitySold - a.totalQuantitySold),
+        topSellingProducts: Object.values(productSales).sort(
+          (a, b) => b.totalQuantitySold - a.totalQuantitySold
+        ),
       };
       return acc;
     }, {});
@@ -68,7 +97,10 @@ const Dashboard = () => {
     let filteredOrders = {};
     if (specificDate) {
       const formattedDate = format(specificDate, "yyyy-MM-dd");
-      filteredOrders = ordersByDate[formattedDate] || { totalRevenue: 0, topSellingProducts: [] };
+      filteredOrders = ordersByDate[formattedDate] || {
+        totalRevenue: 0,
+        topSellingProducts: [],
+      };
     } else if (startDate && endDate) {
       let totalRevenue = 0;
       let productSales = {};
@@ -80,13 +112,19 @@ const Dashboard = () => {
             if (!productSales[product.name]) {
               productSales[product.name] = { ...product };
             } else {
-              productSales[product.name].totalQuantitySold += product.totalQuantitySold;
+              productSales[product.name].totalQuantitySold +=
+                product.totalQuantitySold;
               productSales[product.name].totalSales += product.totalSales;
             }
           });
         }
       });
-      filteredOrders = { totalRevenue, topSellingProducts: Object.values(productSales).sort((a, b) => b.totalQuantitySold - a.totalQuantitySold) };
+      filteredOrders = {
+        totalRevenue,
+        topSellingProducts: Object.values(productSales).sort(
+          (a, b) => b.totalQuantitySold - a.totalQuantitySold
+        ),
+      };
     }
     return filteredOrders;
   };
@@ -126,22 +164,66 @@ const Dashboard = () => {
 
   return (
     <Container className="mt-4">
-      <h2 className="text-center mb-4">Dashboard</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <h2
+          className="text-center mb-4"
+          style={{
+            backgroundColor: "black",
+            color: "#f8b400",
+            minHeight: "60px",
+            padding: "10px",
+            width: "30%",
+            borderRadius: "30px",
+
+            fontFamily: "Roboto",
+          }}
+        >
+          · Dashboard ·
+        </h2>{" "}
+      </div>
       <Card className="p-3 mb-4 text-center">
         <h4>Total Revenue Till Now: ₹{totalRevenue.toFixed(2)}</h4>
       </Card>
       <Row className="mb-3">
         <Col>
           <Form.Label>Select Specific Date:</Form.Label>
-          <DatePicker selected={specificDate} onChange={setSpecificDate} dateFormat="yyyy-MM-dd" className="form-control" isClearable placeholderText="Choose a date" />
+          <DatePicker
+            selected={specificDate}
+            onChange={setSpecificDate}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            isClearable
+            placeholderText="Choose a date"
+          />
         </Col>
         <Col>
           <Form.Label>Select Start Date:</Form.Label>
-          <DatePicker selected={startDate} onChange={setStartDate} dateFormat="yyyy-MM-dd" className="form-control" isClearable placeholderText="Choose a start date" />
+          <DatePicker
+            selected={startDate}
+            onChange={setStartDate}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            isClearable
+            placeholderText="Choose a start date"
+          />
         </Col>
         <Col>
           <Form.Label>Select End Date:</Form.Label>
-          <DatePicker selected={endDate} onChange={setEndDate} dateFormat="yyyy-MM-dd" className="form-control" isClearable placeholderText="Choose an end date" />
+          <DatePicker
+            selected={endDate}
+            onChange={setEndDate}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            isClearable
+            placeholderText="Choose an end date"
+          />
         </Col>
       </Row>
       {filteredData.totalRevenue > 0 && (

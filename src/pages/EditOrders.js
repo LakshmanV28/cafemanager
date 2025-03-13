@@ -156,7 +156,28 @@ const EditOrders = () => {
 
   return (
     <Container className="mt-4">
-      <h2 className="text-center mb-4">Edit Orders</h2>
+     <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <h2
+          className="text-center mb-4"
+          style={{
+            backgroundColor: "black",
+            color: "#f8b400",
+            minHeight: "60px",
+            padding: "10px",
+            width: "30%",
+            borderRadius: "30px",
+
+            fontFamily: "Roboto",
+          }}
+        > Edit Orders</h2>
+        </div>
       {orders && orders.length > 0 ? (
         <Row>
           {orders

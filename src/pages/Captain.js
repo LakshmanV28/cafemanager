@@ -170,7 +170,7 @@ const Products = () => {
             fontFamily: "Roboto",
           }}
         >
-          Captain Booking
+         · Captain Booking ·
         </h2>
       </div>
 

@@ -28,7 +28,9 @@ const Chef = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("https://cashman-node.onrender.com/api/chef");
+      const response = await axios.get(
+        "https://cashman-node.onrender.com/api/chef"
+      );
       setOrders(response.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -51,7 +53,9 @@ const Chef = () => {
       if (oldOrder) {
         // Check for newly added items
         newOrder.items.forEach((newItem) => {
-          const oldItem = oldOrder.items.find((item) => item._id === newItem._id);
+          const oldItem = oldOrder.items.find(
+            (item) => item._id === newItem._id
+          );
           if (!oldItem && newItem.status === "added") {
             playSound("add"); // Play sound for newly added item
           }
@@ -59,8 +63,13 @@ const Chef = () => {
 
         // Check for deleted items
         oldOrder.items.forEach((oldItem) => {
-          const newItem = newOrder.items.find((item) => item._id === oldItem._id);
-          if (!newItem || (oldItem.status !== "deleted" && newItem?.status === "deleted")) {
+          const newItem = newOrder.items.find(
+            (item) => item._id === oldItem._id
+          );
+          if (
+            !newItem ||
+            (oldItem.status !== "deleted" && newItem?.status === "deleted")
+          ) {
             playSound("delete"); // Play sound for deleted item
           }
         });
@@ -70,7 +79,31 @@ const Chef = () => {
 
   return (
     <Container className="mt-4">
-      <h2 className="text-center mb-4">Chef Orders</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <h2
+          className="text-center mb-4"
+          style={{
+            backgroundColor: "black",
+            color: "#f8b400",
+            minHeight: "60px",
+            padding: "10px",
+            width: "30%",
+            borderRadius: "30px",
+
+            fontFamily: "Roboto",
+          }}
+        >
+          · Chef Orders ·
+        </h2>
+      </div>
+
       {orders.length === 0 ? (
         <h4 className="text-center text-muted">No orders available</h4>
       ) : (
@@ -85,8 +118,11 @@ const Chef = () => {
                       key={item._id}
                       style={{
                         color:
-                          item.status === "added" ? "green" :
-                          item.status === "deleted" ? "red" : "black",
+                          item.status === "added"
+                            ? "green"
+                            : item.status === "deleted"
+                            ? "red"
+                            : "black",
                       }}
                     >
                       <strong>Name:</strong> {item.name} <br />
