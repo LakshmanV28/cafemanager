@@ -250,13 +250,12 @@ const Products = () => {
 
       {/* 🛒 View Cart Button */}
       {cart.length > 0 && (
-        <div className="text-center mt-4">
-          <Button variant="primary" size="lg" onClick={() => setShowCart(true)}>
-            View Cart ({cart.reduce((total, item) => total + item.quantity, 0)}{" "}
-            items)
-          </Button>
-        </div>
-      )}
+  <div style={{ position: "fixed", bottom: "20px", right: "20px", zIndex: "1000" }}>
+    <Button variant="primary" size="lg" onClick={() => setShowCart(true)}>
+      View Cart ({cart.reduce((total, item) => total + item.quantity, 0)} items)
+    </Button>
+  </div>
+)}
 
       {/* 🛒 Offcanvas for Cart */}
       <Offcanvas
