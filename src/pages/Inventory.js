@@ -19,7 +19,7 @@ const Inventory = () => {
 
     const fetchInventory = async () => {
         try {
-            const res = await axios.get("https://cashman-node.onrender.com/api/auth/login/api/inventory");
+            const res = await axios.get("https://cashman-node.onrender.com/api/inventory");
             setInventory(res.data);
             setFilteredInventory(res.data); // Initialize filtered data
         } catch (error) {
