@@ -1,0 +1,13 @@
+{
+    "_id": { "$oid": "67d2f3f3b820f6365b385904" },
+    "category": "Desserts",
+    "products": [
+      { "name": "Gulab Jamun", "price": { "$numberInt": "99" } },
+      { "name": "Rasgulla", "price": { "$numberInt": "99" } },
+      { "name": "Rasmalai", "price": { "$numberInt": "129" } },
+      { "name": "Gajar Ka Halwa", "price": { "$numberInt": "149" } },
+      { "name": "Kheer", "price": { "$numberInt": "119" } },
+      { "name": "Chocolate Brownie", "price": { "$numberInt": "149" } },
+      { "name": "Ice Cream (1 Scoop)", "price": { "$numberInt": "79" } }
+    ]
+  }

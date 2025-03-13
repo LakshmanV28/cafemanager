@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
+import imageList from "../assets/image"
+
 import {
   Container,
   Row,
@@ -10,7 +13,6 @@ import {
   Offcanvas,
   Modal,
 } from "react-bootstrap";
-
 const Products = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
