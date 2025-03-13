@@ -170,8 +170,8 @@ const EditOrders = () => {
                 xl={3}
                 className="mb-4"
               >
-                <Card className="shadow-lg p-3 bg-white rounded">
-                  <Card.Body>
+                <Card >
+                  <Card.Body style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}> 
                     <Card.Title>Table {order.tableNo}</Card.Title>
                     {order.items.map((item) => (
                       <Card.Text key={item._id}>

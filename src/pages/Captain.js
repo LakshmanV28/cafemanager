@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import imageList from "../assets/image"
+import { imagelist } from "../assets/image";
 
 import {
   Container,
@@ -9,6 +9,7 @@ import {
   Col,
   Card,
   Button,
+  Image,
   Form,
   Offcanvas,
   Modal,
@@ -148,13 +149,46 @@ const Products = () => {
 
   return (
     <Container className="mt-4">
-      <h2 className="text-center mb-4">Captain Booking</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <h2
+          className="text-center mb-4"
+          style={{
+            backgroundColor: "black",
+            color: "#f8b400",
+            minHeight: "60px",
+            padding: "10px",
+            width: "30%",
+            borderRadius: "30px",
+
+            fontFamily: "Roboto",
+          }}
+        >
+          Captain Booking
+        </h2>
+      </div>
 
       {/* 🔍 Search Bar */}
       <Form className="mb-4">
         <Form.Control
           type="text"
           placeholder="Search for products..."
+          style={{
+            border: "none",
+            background: "transparent",
+            outline: "none",
+            borderBottom: "5px solid black",
+            borderRadius: "5px",
+            padding: "8px",
+            minHeight: "60px",
+            width: "100%",
+          }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -167,18 +201,21 @@ const Products = () => {
           <div key={index} className="mb-5">
             <h3 className="text-center">{categoryData.category}</h3>
             <Row>
-              {categoryData.products.map((product) => (
+              {categoryData.products.map((product, index) => (
                 <Col
                   key={product._id}
-                  sm={12}
+                  xs={6}
+                  sm={6}
                   md={6}
                   lg={4}
                   xl={3}
                   className="mb-4"
                 >
-                  <Card className="shadow-lg p-3 bg-white rounded position-relative">
+                  <Card
+                    style={{ border: "1px solid #343a40", borderRadius: "8px" }}
+                  >
                     <Button
-                      variant="outline-dark"
+                      variant="dark"
                       size="sm"
                       style={{
                         position: "absolute",
@@ -192,7 +229,26 @@ const Products = () => {
                     </Button>
 
                     <Card.Body>
-                      <Card.Title>{product.name || "No Name"}</Card.Title>
+                      <Image
+                        src={imagelist[index]}
+                        fluid
+                        height={30}
+                        width="100%"
+                        style={{
+                          borderRadius: "20px",
+                        }}
+                      />
+                      <Card.Title
+                        style={{
+                          minHeight: "40px", // Ensures uniform height for all titles
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                        }}
+                      >
+                        {product.name || "No Name"}
+                      </Card.Title>
 
                       {/* Quantity Control */}
                       <div className="d-flex align-items-center">
@@ -230,6 +286,10 @@ const Products = () => {
                       {showCommentBox[product.name] && (
                         <Form.Control
                           className="mt-2"
+                          style={{
+                            minHeight: "60px",
+                            border: "1px solid black",
+                          }}
                           type="text"
                           placeholder="Cooking Instructions..."
                           value={
@@ -250,12 +310,20 @@ const Products = () => {
 
       {/* 🛒 View Cart Button */}
       {cart.length > 0 && (
-  <div style={{ position: "fixed", bottom: "20px", right: "20px", zIndex: "1000" }}>
-    <Button variant="primary" size="lg" onClick={() => setShowCart(true)}>
-      View Cart ({cart.reduce((total, item) => total + item.quantity, 0)} items)
-    </Button>
-  </div>
-)}
+        <div
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            zIndex: "1000",
+          }}
+        >
+          <Button variant="primary" size="lg" onClick={() => setShowCart(true)}>
+            View Cart ({cart.reduce((total, item) => total + item.quantity, 0)}{" "}
+            items)
+          </Button>
+        </div>
+      )}
 
       {/* 🛒 Offcanvas for Cart */}
       <Offcanvas
@@ -275,7 +343,6 @@ const Products = () => {
                   key={num}
                   variant="dark"
                   className="w-25"
-                
                   onClick={() => setTableNo(`Table ${num}`)}
                 >
                   Table {num}
