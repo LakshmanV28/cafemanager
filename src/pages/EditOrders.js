@@ -23,7 +23,6 @@ const EditOrders = () => {
     qty: 1,
     comment: "",
     orderId: "",
-    
   });
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,20 +49,23 @@ const EditOrders = () => {
 
   const fetchOrders = async () => {
     try {
-        const response = await axios.get("https://cashman-node.onrender.com/api/editorders");
+      const response = await axios.get(
+        "https://cashman-node.onrender.com/api/editorders"
+      );
 
-        const filteredOrders = (response.data || []).map(order => ({
-            ...order,
-            items: order.items.filter(item => item.status !== "deleted"), // Exclude deleted items
-        })).filter(order => order.items.length > 0); // Remove orders with no remaining items
+      const filteredOrders = (response.data || [])
+        .map((order) => ({
+          ...order,
+          items: order.items.filter((item) => item.status !== "deleted"), // Exclude deleted items
+        }))
+        .filter((order) => order.items.length > 0); // Remove orders with no remaining items
 
-        setOrders(filteredOrders);
+      setOrders(filteredOrders);
     } catch (error) {
-        console.error("Error fetching orders:", error);
-        setOrders([]);
+      console.error("Error fetching orders:", error);
+      setOrders([]);
     }
-};
-
+  };
 
   const fetchProducts = async () => {
     try {
@@ -93,7 +95,7 @@ const EditOrders = () => {
         )
       );
       setShowModal(false);
-      setNewItem({ name: "", qty: 1, comment: "",orderId: "" });
+      setNewItem({ name: "", qty: 1, comment: "", orderId: "" });
       setSearchTerm("");
     } catch (error) {
       console.error("Error adding item:", error);
@@ -109,7 +111,7 @@ const EditOrders = () => {
     try {
       const response = await axios.put(
         `https://cashman-node.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
-        { qty, comment}
+        { qty, comment }
       );
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
@@ -127,57 +129,36 @@ const EditOrders = () => {
   };
   const handleDeleteItem = async () => {
     try {
-        const { orderId, itemId } = deleteItemData;
-        const response = await axios.post(
-            `https://cashman-node.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
-        );
+      const { orderId, itemId } = deleteItemData;
+      const response = await axios.post(
+        `https://cashman-node.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
+      );
 
-        setOrders((prevOrders) =>
-            prevOrders
-                .map((order) =>
-                    order._id === orderId
-                        ? {
-                            ...order,
-                            items: order.items
-                                .filter(item => item._id !== itemId && item.status !== "deleted") // Remove deleted items
-                        }
-                        : order
-                )
-                .filter(order => order.items.length > 0) // Remove empty orders
-        );
+      setOrders(
+        (prevOrders) =>
+          prevOrders
+            .map((order) =>
+              order._id === orderId
+                ? {
+                    ...order,
+                    items: order.items.filter(
+                      (item) => item._id !== itemId && item.status !== "deleted"
+                    ), // Remove deleted items
+                  }
+                : order
+            )
+            .filter((order) => order.items.length > 0) // Remove empty orders
+      );
 
-        setShowDeleteModal(false);
+      setShowDeleteModal(false);
     } catch (error) {
-        console.error("Error deleting item:", error);
+      console.error("Error deleting item:", error);
     }
-};
-
-
+  };
 
   return (
     <Container className="mt-4">
-     <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <h2
-          className="text-center mb-4"
-          style={{
-            backgroundColor: "black",
-            color: "#f8b400",
-            minHeight: "60px",
-            padding: "10px",
-            width: "30%",
-            borderRadius: "30px",
-
-            fontFamily: "Roboto",
-          }}
-        > Edit Orders</h2>
-        </div>
+      <h2 className="text-center mb-4"> Edit Orders</h2>
       {orders && orders.length > 0 ? (
         <Row>
           {orders
@@ -191,8 +172,15 @@ const EditOrders = () => {
                 xl={3}
                 className="mb-4"
               >
-                <Card >
-                  <Card.Body style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}> 
+                <Card>
+                  <Card.Body
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
                     <Card.Title>Table {order.tableNo}</Card.Title>
                     {order.items.map((item) => (
                       <Card.Text key={item._id}>
