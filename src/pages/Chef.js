@@ -79,48 +79,52 @@ const Chef = () => {
 
   return (
     <Container className="mt-4">
-     
-        <h2
-          className="text-center mb-4"
-          >
-          · Chef Orders ·
-        </h2>
+      <h2 className="text-center mb-4">· Chef Orders ·</h2>
 
       {orders.length === 0 ? (
         <h4 className="text-center text-muted">No orders available</h4>
       ) : (
         <Row>
-          {orders.map((order) => (
-            <Col key={order._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
-              <Card className="shadow-lg p-3 bg-white rounded">
-                <Card.Body>
-                  <Card.Title>{order.tableNo}</Card.Title>
-                  {order.items.map((item) => (
-                    <Card.Text
-                      key={item._id}
-                      style={{
-                        color:
-                          item.status === "added"
-                            ? "green"
-                            : item.status === "deleted"
-                            ? "red"
-                            : "black",
-                      }}
-                    >
-                      <strong>Name:</strong> {item.name} <br />
-                      <strong>Quantity:</strong> {item.qty} <br />
-                      <strong>Comment:</strong> {item.comment || "No comment"}
-                    </Card.Text>
-                  ))}
-                  <Card.Footer>
-                    <small className="text-muted">
-                      Order Time: {new Date(order.orderTime).toLocaleString()}
-                    </small>
-                  </Card.Footer>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+          {orders.map((order) => {
+            // Check if the only item in the order is deleted
+            const hasOnlyDeletedItem = order.items.length === 1 && order.items[0].status === "deleted";
+            if (hasOnlyDeletedItem) {
+              // Don't render this card if the only item is marked as deleted
+              return null;
+            }
+
+            return (
+              <Col key={order._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+                <Card className="shadow-lg p-3 bg-white rounded">
+                  <Card.Body>
+                    <Card.Title>{order.tableNo}</Card.Title>
+                    {order.items.map((item) => (
+                      <Card.Text
+                        key={item._id}
+                        style={{
+                          color:
+                            item.status === "added"
+                              ? "green"
+                              : item.status === "deleted"
+                              ? "red"
+                              : "black",
+                        }}
+                      >
+                        <strong>Name:</strong> {item.name} <br />
+                        <strong>Quantity:</strong> {item.qty} <br />
+                        <strong>Comment:</strong> {item.comment || "No comment"}
+                      </Card.Text>
+                    ))}
+                    <Card.Footer>
+                      <small className="text-muted">
+                        Order Time: {new Date(order.orderTime).toLocaleString()}
+                      </small>
+                    </Card.Footer>
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })}
         </Row>
       )}
     </Container>
