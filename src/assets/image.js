@@ -1,6 +1,5 @@
 import sweetcornSoup from "./sweetcorn_soup,_creamy_and_steaming,_gar.png";
 import mushroomSoup from "./creamy_mushroom_soup,_garnished_with_sau.png";
-
 import tomatoSoup from "./tomato_soup,_vibrant_red,_topped_with_fr.png";
 import frenchOnionSoup from "./French_onion_soup,_topped_with_melted_ch.png";
 import vegClearSoup from "./clear_vegetable_soup,_with_diced_carrots.png";
@@ -38,6 +37,17 @@ import DalTadka from "./Dal_Tadka,_a_c.png";
 import PalakPaneer from "./Palak_Paneer,_.png";
 import DalMakani from "./Dal_Makani,_a_.png";
 import MalaiKofta from "./Malai_Kofta,_a.png"
+import VegDumBiriyani from "./Veg Dum Biriyani.png"
+import MushroomBiriyani from "./Mushroom Biriyani.png"
+import PaneerBiriyani from "./Paneer Biriyani.png"
+import VegPulao from "./Veg Pulao.png"
+import PaneerPulao from "./Paneer Pulao.png"
+import MushroomPulao from "./Mushroom Pulao.png"
+import KashmiriPulao from "./Kashmiri Pulao.png"
+import GreenPeasPulao from "./Green Peas Pulao.png"
+import JeeraRice from "./Jeera Rice.png"
+import GheeRice from "./Ghee Rice.png"
+
 
 let imagelist = [
   sweetcornSoup,
@@ -79,5 +89,16 @@ let imagelist = [
   DalTadka,
   PalakPaneer,
   DalMakani,
+  VegDumBiriyani,
+  MushroomBiriyani,
+  PaneerBiriyani,
+  VegPulao,
+  PaneerPulao,
+  MushroomPulao,
+  KashmiriPulao,
+  GreenPeasPulao,
+  JeeraRice,
+  GheeRice
+  
 ];
 export { imagelist };
