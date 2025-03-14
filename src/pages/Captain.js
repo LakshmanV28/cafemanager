@@ -199,7 +199,6 @@ const Products = () => {
                         top: "10px",
                         right: "10px",
                       }}
-                      title="Cooking Instructions..."
                       onClick={() => toggleCommentBox(product.name)}
                     >
                       📝
@@ -270,7 +269,7 @@ const Products = () => {
                             border: "1px solid black",
                           }}
                           type="text"
-                          placeholder="Cooking Instructions..."
+                          defaultValue="Cooking Instructions..."
                           value={
                             cart.find((item) => item.name === product.name)
                               ?.comment || ""
