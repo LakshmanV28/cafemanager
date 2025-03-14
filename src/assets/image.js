@@ -47,6 +47,10 @@ import KashmiriPulao from "./Kashmiri Pulao.png"
 import GreenPeasPulao from "./Green Peas Pulao.png"
 import JeeraRice from "./Jeera Rice.png"
 import GheeRice from "./Ghee Rice.png"
+import DalMakhani from "./Dal Makhani.png"
+import VegKolhapuri from "./Veg Kolhapuri.png"
+import VegKurma from "./Veg Kurma.png"
+import ChanaMasala from "./Chana Masala.png"
 
 
 let imagelist = [
@@ -98,7 +102,11 @@ let imagelist = [
   KashmiriPulao,
   GreenPeasPulao,
   JeeraRice,
-  GheeRice
+  GheeRice,
+  DalMakhani,
+  VegKolhapuri,
+  VegKurma,
+  ChanaMasala
   
 ];
 export { imagelist };
