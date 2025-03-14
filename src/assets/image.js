@@ -88,6 +88,18 @@ import TandooriRoti from "../assets/breads/A_realistic_image_of_Tandoori_Roti_an
 
 
 
+import MalaiKofta from "./Malai_Kofta,_a.png"
+import VegDumBiriyani from "./Veg Dum Biriyani.png"
+import MushroomBiriyani from "./Mushroom Biriyani.png"
+import PaneerBiriyani from "./Paneer Biriyani.png"
+import VegPulao from "./Veg Pulao.png"
+import PaneerPulao from "./Paneer Pulao.png"
+import MushroomPulao from "./Mushroom Pulao.png"
+import KashmiriPulao from "./Kashmiri Pulao.png"
+import GreenPeasPulao from "./Green Peas Pulao.png"
+import JeeraRice from "./Jeera Rice.png"
+import GheeRice from "./Ghee Rice.png"
+
 
 let imagelist = [
   { cat: "Soups", img: sweetcornSoup },
@@ -177,5 +189,55 @@ let imagelist = [
   { cat: "Indian Breads",  img: Naan },
   { cat: "Indian Breads",  img: Pulka },
   { cat: "Indian Breads",  img: TandooriRoti }
+  sweetcornSoup,
+  mushroomSoup,
+  tomatoSoup,
+  frenchOnionSoup,
+  vegClearSoup,
+  vegManchowSoup,
+  hotSourSoup,
+  lemonCorianderSoup,
+  gobiManchurian,
+  mushroomManchurian,
+  paneerManchurian,
+  babyCornManchurian,
+  chilliPaneer,
+  chilliGobi,
+  chilliBabyCorn,
+  gobiPepperFry,
+  paneerPepperFry,
+  mushroomPepperFry,
+  dragonPaneer,
+  dragonGobi,
+  chilliMushroom,
+  chinesePlatter,
+  GobiMasala,
+  MushroomMasala,
+  PaneerButterMasala,
+  BabyCornMasala,
+  KadaiPaneer,
+  PaneerTikkaMasala,
+  ShahiPaneer,
+  MixVegGravy,
+  KadaiVeg,
+  MalaiKofta,
+  AlooGobiMasala,
+  GreenPeasMasala,
+  KadaiMushroom,
+  DalFry,
+  DalTadka,
+  PalakPaneer,
+  DalMakani,
+  VegDumBiriyani,
+  MushroomBiriyani,
+  PaneerBiriyani,
+  VegPulao,
+  PaneerPulao,
+  MushroomPulao,
+  KashmiriPulao,
+  GreenPeasPulao,
+  JeeraRice,
+  GheeRice
+  
 ];
 export { imagelist };
