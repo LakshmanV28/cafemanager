@@ -227,8 +227,8 @@ const Captain = () => {
                         <Image
                           src={productImage}
                           fluid
-                          height={80}
-                          width={80}
+                          height={120}
+                          width={120}
                           style={{
                             borderRadius: "10px",
                             border: "1px solid black",
