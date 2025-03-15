@@ -147,6 +147,8 @@ const Products = () => {
 
   const tableButtons = Array.from({ length: 8 }, (_, i) => i + 1);
 
+  const categoriesWithImages = ["Soups", "Beverages", "Indian curries", "Indian Breads"];
+
   return (
     <Container className="mt-4">
       <h2 className="text-center mb-4">· Captain Booking ·</h2>
@@ -205,15 +207,16 @@ const Products = () => {
                     </Button>
 
                     <Card.Body>
+                    {categoriesWithImages.includes(categoryData.category) && (
                       <Image
                         src={imagelist[index]}
                         fluid
                         height={30}
-                        width="100%"
-                        style={{
-                          borderRadius: "20px",
-                        }}
+                        width={30}
+                        style={{ marginRight: "10px", borderRadius: "50%" }}
                       />
+                    )}
+                      
                       <Card.Title
                         style={{
                           minHeight: "40px", // Ensures uniform height for all titles
