@@ -14,7 +14,7 @@ import {
   Offcanvas,
   Modal,
 } from "react-bootstrap";
-const Products = () => {
+const Captain = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [cart, setCart] = useState([]);
@@ -356,4 +356,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Captain;
