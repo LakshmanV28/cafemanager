@@ -138,7 +138,7 @@ const RecipeList = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 d-flex flex-column gap-3">
       <h2 className="text-center mb-4">Recipe List</h2>
       <input
         type="text"

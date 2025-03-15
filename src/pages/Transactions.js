@@ -10,10 +10,28 @@ const Transactions = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const fetchOrders = async () => {
     try {
@@ -85,7 +103,7 @@ const Transactions = () => {
   };
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 d-flex flex-column gap-3">
       <h2 className="text-center mb-4">Orders</h2>
 
       {/* Date Filters */}
@@ -176,6 +194,20 @@ const Transactions = () => {
           </Card>
         ))
       )}
+      <Button
+        variant="dark"
+        onClick={scrollToTop}
+        className={`position-fixed bottom-3 end-3 p-3 rounded-circle ${isVisible ? "d-block" : "d-none"
+          }`}
+        style={{
+          right: "20px",
+          bottom: "20px",
+          zIndex: 1000,
+          boxShadow: "0px 0px 10px rgba(0,0,0,0.2)",
+        }}
+      >
+        ⬆
+      </Button>
     </Container>
   );
 };

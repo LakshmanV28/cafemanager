@@ -101,7 +101,7 @@ const Closing = () => {
     
 
     return (
-        <Container className="mt-4">
+        <Container className="mt-4 d-flex flex-column gap-3">
             <h2 className="text-center mb-4">Remaining Inventory</h2>
             <Row>                
                 {remainingInventory.map((item) => (

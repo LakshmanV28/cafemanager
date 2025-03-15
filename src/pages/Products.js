@@ -147,7 +147,7 @@ const Products = () => {
     .filter((category) => category.products.length > 0);
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 d-flex flex-column gap-3">
       <h2 className="text-center mb-4">Products</h2>
 
       {/* 🔍 Search Bar */}

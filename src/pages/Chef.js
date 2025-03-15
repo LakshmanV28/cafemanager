@@ -78,7 +78,7 @@ const Chef = () => {
   };
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 d-flex flex-column gap-3">
       <h2 className="text-center mb-4">· Chef Orders ·</h2>
 
       {orders.length === 0 ? (

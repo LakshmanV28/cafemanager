@@ -61,7 +61,7 @@ const BillCounter = () => {
         `https://cashman-node.onrender.com/api/billcounter/orders/${order._id}`
       );
 
-      alert(`Table ${order.tableNo} checked out successfully!`);
+      alert(`${order.tableNo} checked out successfully!`);
 
       // ✅ Refresh orders list
       fetchOrders();
@@ -105,7 +105,7 @@ const BillCounter = () => {
               >
                 <Card className="shadow-lg p-3 bg-white rounded">
                   <Card.Body>
-                    <Card.Title>Table {order.tableNo}</Card.Title>
+                    <Card.Title>{order.tableNo}</Card.Title>
                     {order.items.map((item) => (
                       <div key={item._id} className="mb-3">
                         <Card.Text>
@@ -144,7 +144,7 @@ const BillCounter = () => {
                       className="mt-3"
                       onClick={() => handleCheckout(order)}
                     >
-                      Table: {order.tableNo} Paid
+                      {order.tableNo} Paid
                     </Button>
                   </Card.Body>
                 </Card>

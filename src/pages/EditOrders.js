@@ -157,7 +157,7 @@ const EditOrders = () => {
   };
 
   return (
-    <Container className="mt-4">
+    <Container className="m-3 d-flex flex-column gap-3">
       <h2 className="text-center mb-4"> Edit Orders</h2>
       {orders && orders.length > 0 ? (
         <Row>
@@ -230,7 +230,7 @@ const EditOrders = () => {
         <h4 className="text-center text-muted">No orders available</h4>
       )}
 
-      <Button variant="success" onClick={() => setShowModal(true)}>
+      <Button variant="success" className="col-sm-2" onClick={() => setShowModal(true)}>
         Add Item
       </Button>
 

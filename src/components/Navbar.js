@@ -10,7 +10,7 @@ const NavBar = ({ user, onLogout }) => {
       <Container>
       <Navbar.Brand as={Link} to="/" style={{ display: "flex", flexDirection: "column", alignItems: "center", textDecoration: "none" }}>
   <h1 style={{ color: "#f8b400", fontSize: "1.2rem", margin: "0", fontWeight: "bold" }}>
-    CaféSync
+    Cafétarian
   </h1>
   <h6 style={{ color: "#ffffff", fontSize: "1rem", marginTop: "2px", fontWeight: "normal" }}>
     by DeuxForge

@@ -82,7 +82,7 @@ const Inventory = () => {
     const totalExpense = filteredInventory.reduce((sum, item) => sum + (item.quantity * (item.price || 0)), 0);
 
     return (
-        <Container className="mt-4">
+        <Container className="m-3 d-flex flex-column gap-3">
             <h2 className="text-center mb-4">Inventory Management</h2>
 
             {/* Search Bar */}
@@ -123,7 +123,7 @@ const Inventory = () => {
             </Row>
 
             {/* Total Expense */}
-            <h4 className="text-center mt-4">Total Inventory Stock Amount: ₹{totalExpense.toFixed(2)}</h4>
+            <h4 className="text-center mb-4">Total Inventory Stock Amount: ₹{totalExpense.toFixed(2)}</h4>
 
             {/* Modal for Adding Ingredient */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>

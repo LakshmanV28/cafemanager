@@ -21,10 +21,28 @@ const Products = () => {
   const [tableNo, setTableNo] = useState("");
   const [showCart, setShowCart] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const fetchProducts = async () => {
     try {
@@ -175,7 +193,7 @@ const Products = () => {
         <h4 className="text-center text-muted">No products found</h4>
       ) : (
         filteredCategories.map((categoryData, index) => (
-          <div key={index} className="mb-5">
+          <div key={index} className="d-flex flex-column gap-4 mb-5">
             <h3 className="text-center">{categoryData.category}</h3>
             <Row>
               {categoryData.products.map((product, index) => (
@@ -188,98 +206,69 @@ const Products = () => {
                   xl={3}
                   className="mb-4"
                 >
-                  <Card
-                    style={{ border: "1px solid #343a40", borderRadius: "8px" }}
-                  >
-                    <Button
-                      variant="dark"
-                      size="sm"
-                      style={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "10px",
-                      }}
-                      title="Cooking Instructions..."
-                      onClick={() => toggleCommentBox(product.name)}
-                    >
-                      📝
-                    </Button>
+                  <Card className="border border-dark rounded position-relative">
+                    {/* Top Right Button using Bootstrap Flex Utilities */}
+                    <div className="d-flex justify-content-end p-2">
+                      <Button
+                        variant="dark"
+                        title="Cooking Instructions..."
+                        onClick={() => toggleCommentBox(product.name)}
+                      >
+                        📝
+                      </Button>
+                    </div>
 
-                    <Card.Body>
+                    {/* Card Body */}
+                    <Card.Body className="d-flex flex-column align-items-center text-center gap-2">
                       <Image
                         src={imagelist[index]}
                         fluid
                         height={30}
                         width="100%"
-                        style={{
-                          borderRadius: "20px",
-                        }}
+                        className="rounded"
                       />
-                      <Card.Title
-                        style={{
-                          minHeight: "40px", // Ensures uniform height for all titles
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          textAlign: "center",
-                        }}
-                      >
+                      <Card.Title className="d-flex align-items-center justify-content-center text-center" style={{ minHeight: "40px" }}>
                         {product.name || "No Name"}
                       </Card.Title>
-                      <Form.Control
+
+
+
+
+                      <div className="d-flex gap-2 align-items-center">
+
+                        {/* Quantity Input */}
+                        <Form.Control
                           type="number"
                           className="text-center mx-2"
                           value={getProductQuantity(product.name)}
                           defaultValue={"0"}
-                          onChange={(e) =>
-                            handleQuantityChange(
-                              product,
-                              e,
-                              categoryData.category
-                            )
-                          }
+                          onChange={(e) => handleQuantityChange(product, e, categoryData.category)}
                         />
 
-                      {/* Quantity Control */}
-                      <div className="d-flex align-items-center">
-                        <Button
-                          variant="danger"
-                          onClick={() =>
-                            updateQuantity(product, -1, categoryData.category)
-                          }
-                        >
-                          -
-                        </Button>
-                   
-                        <Button
-                          variant="success"
-                          onClick={() =>
-                            updateQuantity(product, 1, categoryData.category)
-                          }
-                        >
+                        {/* Quantity Control Buttons */}
+                        <Button variant="success" onClick={() => updateQuantity(product, 1, categoryData.category)}>
                           +
                         </Button>
+                        <Button variant="danger" onClick={() => updateQuantity(product, -1, categoryData.category)}>
+                          -
+                        </Button>
+
                       </div>
 
                       {/* Conditionally shown Comment Input */}
                       {showCommentBox[product.name] && (
                         <Form.Control
-                          className="mt-2"
-                          style={{
-                            minHeight: "60px",
-                            border: "1px solid black",
-                          }}
+                          className="mt-2 border border-dark"
+                          style={{ minHeight: "60px" }}
                           type="text"
                           placeholder="Cooking Instructions..."
-                          value={
-                            cart.find((item) => item.name === product.name)
-                              ?.comment || ""
-                          }
+                          value={cart.find((item) => item.name === product.name)?.comment || ""}
                           onChange={(e) => handleCommentChange(product.name, e)}
                         />
                       )}
                     </Card.Body>
                   </Card>
+
                 </Col>
               ))}
             </Row>
@@ -304,6 +293,21 @@ const Products = () => {
         </div>
       )}
 
+      <Button
+        variant="dark"
+        onClick={scrollToTop}
+        className={`position-fixed bottom-3 end-3 p-3 rounded-circle ${isVisible ? "d-block" : "d-none"
+          }`}
+        style={{
+          right: "20px",
+          bottom: "20px",
+          zIndex: 1000,
+          boxShadow: "0px 0px 10px rgba(0,0,0,0.2)",
+        }}
+      >
+        ⬆
+      </Button>
+
       {/* 🛒 Offcanvas for Cart */}
       <Offcanvas
         show={showCart}
@@ -320,7 +324,7 @@ const Products = () => {
               {tableButtons.map((num) => (
                 <Button
                   key={num}
-                  variant="dark"
+                  variant={tableNo === `Table ${num}` ? "dark" : "light"}
                   className="w-25"
                   onClick={() => setTableNo(`Table ${num}`)}
                 >
