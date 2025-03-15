@@ -201,6 +201,7 @@ const EditOrders = () => {
                         <strong>Comment:</strong>
                         <Form.Control
                           type="text"
+                          defaultValue="comment"
                           value={item.comment}
                           onChange={(e) =>
                             handleUpdateItem(

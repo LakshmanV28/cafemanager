@@ -165,6 +165,8 @@ const Products = () => {
 
   const tableButtons = Array.from({ length: 8 }, (_, i) => i + 1);
 
+  const categoriesWithImages = ["Soups", "Beverages", "Indian curries", "Indian Breads"];
+
   return (
     <Container className="mt-4">
       <h2 className="text-center mb-4">· Captain Booking ·</h2>
@@ -220,14 +222,25 @@ const Products = () => {
 
                     {/* Card Body */}
                     <Card.Body className="d-flex flex-column align-items-center text-center gap-2">
+                    {categoriesWithImages.includes(categoryData.category) && (
                       <Image
                         src={imagelist[index]}
                         fluid
                         height={30}
-                        width="100%"
-                        className="rounded"
+                        width={30}
+                        style={{ marginRight: "10px", borderRadius: "50%" }}
                       />
-                      <Card.Title className="d-flex align-items-center justify-content-center text-center" style={{ minHeight: "40px" }}>
+                    )}
+                      
+                      <Card.Title
+                        style={{
+                          minHeight: "40px", // Ensures uniform height for all titles
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                        }}
+                      >
                         {product.name || "No Name"}
                       </Card.Title>
 
@@ -261,8 +274,11 @@ const Products = () => {
                           className="mt-2 border border-dark"
                           style={{ minHeight: "60px" }}
                           type="text"
-                          placeholder="Cooking Instructions..."
-                          value={cart.find((item) => item.name === product.name)?.comment || ""}
+                          defaultValue="Cooking Instructions..."
+                          value={
+                            cart.find((item) => item.name === product.name)
+                              ?.comment || ""
+                          }
                           onChange={(e) => handleCommentChange(product.name, e)}
                         />
                       )}
