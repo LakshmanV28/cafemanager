@@ -165,7 +165,7 @@ const Products = () => {
 
   const tableButtons = Array.from({ length: 8 }, (_, i) => i + 1);
 
-  const categoriesWithImages = ["Soups", "Beverages", "Indian curries", "Indian Breads"];
+
 
   return (
     <Container className="mt-4">
@@ -222,16 +222,8 @@ const Products = () => {
 
                     {/* Card Body */}
                     <Card.Body className="d-flex flex-column align-items-center text-center gap-2">
-                    {categoriesWithImages.includes(categoryData.category) && (
-                      <Image
-                        src={imagelist[index]}
-                        fluid
-                        height={30}
-                        width={30}
-                        style={{ marginRight: "10px", borderRadius: "50%" }}
-                      />
-                    )}
-                      
+                    
+
                       <Card.Title
                         style={{
                           minHeight: "40px", // Ensures uniform height for all titles
@@ -244,28 +236,39 @@ const Products = () => {
                         {product.name || "No Name"}
                       </Card.Title>
 
-
-
-
                       <div className="d-flex gap-2 align-items-center">
-
                         {/* Quantity Input */}
                         <Form.Control
                           type="number"
                           className="text-center mx-2"
                           value={getProductQuantity(product.name)}
                           defaultValue={"0"}
-                          onChange={(e) => handleQuantityChange(product, e, categoryData.category)}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              product,
+                              e,
+                              categoryData.category
+                            )
+                          }
                         />
 
                         {/* Quantity Control Buttons */}
-                        <Button variant="success" onClick={() => updateQuantity(product, 1, categoryData.category)}>
+                        <Button
+                          variant="success"
+                          onClick={() =>
+                            updateQuantity(product, 1, categoryData.category)
+                          }
+                        >
                           +
                         </Button>
-                        <Button variant="danger" onClick={() => updateQuantity(product, -1, categoryData.category)}>
+                        <Button
+                          variant="danger"
+                          onClick={() =>
+                            updateQuantity(product, -1, categoryData.category)
+                          }
+                        >
                           -
                         </Button>
-
                       </div>
 
                       {/* Conditionally shown Comment Input */}
@@ -284,7 +287,6 @@ const Products = () => {
                       )}
                     </Card.Body>
                   </Card>
-
                 </Col>
               ))}
             </Row>
@@ -312,8 +314,9 @@ const Products = () => {
       <Button
         variant="dark"
         onClick={scrollToTop}
-        className={`position-fixed bottom-3 end-3 p-3 rounded-circle ${isVisible ? "d-block" : "d-none"
-          }`}
+        className={`position-fixed bottom-3 end-3 p-3 rounded-circle ${
+          isVisible ? "d-block" : "d-none"
+        }`}
         style={{
           right: "20px",
           bottom: "20px",
