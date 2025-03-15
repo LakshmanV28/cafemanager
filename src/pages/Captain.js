@@ -194,9 +194,9 @@ const Captain = () => {
         <h4 className="text-center text-muted">No products found</h4>
       ) : (
         filteredCategories.map((categoryData, index) => (
-          <div key={index} className="d-flex flex-column gap-4 mb-5">
+          <div key={index} className="mb-5">
             <h3 className="text-center">{categoryData.category}</h3>
-            <Row>
+            <Row className="d-flex mt-4">
               {categoryData.products.map((product, index) => {
                 // Get all images for the product's category
                 const productImages = imagelist.filter(
@@ -209,8 +209,8 @@ const Captain = () => {
                   : "default_image_url"; // Replace with a real default image
 
                 return (
-                  <Col key={product._id} xs={6} sm={6} md={6} lg={4} xl={3} className="mb-4">
-                    <Card className="border border-dark rounded position-relative">
+                  <Col key={product._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+                    <Card className="border border-dark rounded">
                       {/* Top Right Comment Button */}
                       <div className="d-flex justify-content-end p-2">
                         <Button
@@ -223,7 +223,7 @@ const Captain = () => {
                       </div>
 
                       {/* Display One Image per Product */}
-                      <div className="d-flex justify-content-center p-2">
+                      <div className="d-flex justify-content-center">
                         <Image
                           src={productImage}
                           fluid
@@ -239,7 +239,7 @@ const Captain = () => {
 
                       {/* Card Body */}
                       <Card.Body className="d-flex flex-column align-items-center text-center gap-2">
-                        <Card.Title style={{ minHeight: "40px" }}>
+                        <Card.Title >
                           {product.name || "No Name"}
                         </Card.Title>
 
@@ -247,7 +247,7 @@ const Captain = () => {
                           {/* Quantity Input */}
                           <Form.Control
                             type="number"
-                            className="text-center mx-2"
+                            className="text-center"
                             value={getProductQuantity(product.name)}
                             onChange={(e) => handleQuantityChange(product, e, categoryData.category)}
                           />
@@ -264,8 +264,8 @@ const Captain = () => {
                         {/* Conditionally shown Comment Input */}
                         {showCommentBox[product.name] && (
                           <Form.Control
-                            className="mt-2 border border-dark"
-                            style={{ minHeight: "60px" }}
+                            className="border border-dark"
+                            
                             type="text"
                             value={cart.find((item) => item.name === product.name)?.comment || ""}
                             onChange={(e) => handleCommentChange(product.name, e)}
