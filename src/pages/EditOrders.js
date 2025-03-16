@@ -11,6 +11,8 @@ const EditOrders = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [updateItemData, setUpdateItemData] = useState({ orderId: "", itemId: "", qty: 1, comment: "" });
 
   useEffect(() => {
     fetchOrders();
@@ -85,32 +87,7 @@ const EditOrders = () => {
     setSearchTerm(name);
   };
 
-  // Move this out of the onChange to be called when the button is clicked
-  const handleUpdateItem = async (orderId, itemId) => {
-    const item = orders
-      .find((order) => order._id === orderId)
-      ?.items.find((item) => item._id === itemId);
 
-    if (!item) return;
-
-    const { qty, comment } = item;
-
-    try {
-
-      const response = await axios.post(
-        `https://cashman-node.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
-        { qty, comment }
-      );
-       alert("Items Updated")
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId ? response.data.order : order
-        )
-      );
-    } catch (error) {
-      console.error("Error updating item:", error);
-    }
-  };
 
   const confirmDelete = (orderId, itemId) => {
     setDeleteItemData({ orderId, itemId });
@@ -141,6 +118,31 @@ const EditOrders = () => {
       setShowDeleteModal(false);
     } catch (error) {
       console.error("Error deleting item:", error);
+    }
+  };
+
+
+  const openUpdateModal = (orderId, item) => {
+    setUpdateItemData({ orderId, itemId: item._id, qty: item.qty, comment: item.comment });
+    setShowUpdateModal(true);
+  };
+
+  const handleUpdateItem = async () => {
+    const { orderId, itemId, qty, comment } = updateItemData;
+    try {
+      const response = await axios.post(
+        `https://cashman-node.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
+        { qty, comment }
+      );
+      alert("Item Updated");
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? response.data.order : order
+        )
+      );
+      setShowUpdateModal(false);
+    } catch (error) {
+      console.error("Error updating item:", error);
     }
   };
 
@@ -208,14 +210,14 @@ const EditOrders = () => {
                             )
                           }
                         />
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          className="mt-2"
-                          onClick={() => handleUpdateItem(order._id, item._id)}
-                        >
-                          Update Item
-                        </Button>
+                          <Button
+                        variant="primary"
+                        size="sm"
+                        className="mt-2 me-2"
+                        onClick={() => openUpdateModal(order._id, item)}
+                      >
+                        Update Item
+                      </Button>
                         <Button
                           variant="danger"
                           size="sm"
@@ -337,6 +339,48 @@ const EditOrders = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+   {/* Modal for Updating Items */}
+   <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Item</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Quantity</Form.Label>
+              <Form.Control
+                type="number"
+                value={updateItemData.qty}
+                onChange={(e) =>
+                  setUpdateItemData({ ...updateItemData, qty: Number(e.target.value) })
+                }
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Comment</Form.Label>
+              <Form.Control
+                type="text"
+                value={updateItemData.comment}
+                onChange={(e) =>
+                  setUpdateItemData({ ...updateItemData, comment: e.target.value })
+                }
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowUpdateModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleUpdateItem}>
+            Update Item
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
 
       {/* Confirm Delete Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
