@@ -51,12 +51,13 @@ const App = () => {
             {/* Admin Routes */}
             {user.role === "admin" && (
               <>
+    <Route path="/products" element={<Products />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/transactions" element={<Transactions />} />
                 <Route path="/closing" element={<Closing />} />
                 <Route path="/billcounter" element={<BillCounter />} />
                 <Route path="/inventory" element={<Inventory />} />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
+                <Route path="*" element={<Navigate to="/products" />} />
               </>
             )}
 
