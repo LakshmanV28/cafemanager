@@ -164,7 +164,7 @@ const EditOrders = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Card.Title>Table {order.tableNo}</Card.Title>
+                    <Card.Title> {order.tableNo}</Card.Title>
                     {order.items.map((item) => (
                       <Card.Text key={item._id}>
                         <strong>{item.name}</strong> <br />
