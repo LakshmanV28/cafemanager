@@ -209,7 +209,7 @@ const Captain = () => {
                   : "default_image_url"; // Replace with a real default image
 
                 return (
-                  <Col key={product._id}   sm={6} md={4} lg={3} className="mb-4">
+                  <Col key={product._id}   sm={12} md={6} lg={4} xl={3} className="mb-4">
                     <Card className="border border-dark rounded position-relative">
                       {/* Top Right Comment Button */}
                       <div className="d-flex justify-content-end p-2">
