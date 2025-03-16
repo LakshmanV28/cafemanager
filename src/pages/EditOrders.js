@@ -172,6 +172,7 @@ const EditOrders = () => {
                         <Form.Control
                           type="number"
                           value={item.qty}
+readonly
                           onChange={(e) =>
                             setOrders((prevOrders) =>
                               prevOrders.map((prevOrder) =>
@@ -193,6 +194,7 @@ const EditOrders = () => {
                         <Form.Control
                           type="text"
                           value={item.comment}
+readonly
                           onChange={(e) =>
                             setOrders((prevOrders) =>
                               prevOrders.map((prevOrder) =>
@@ -258,7 +260,7 @@ const EditOrders = () => {
                 <option value="">Select an order</option>
                 {orders.map((order) => (
                   <option key={order._id} value={order._id}>
-                    Table {order.tableNo}
+                    {order.tableNo}
                   </option>
                 ))}
               </Form.Control>
