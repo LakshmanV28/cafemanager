@@ -244,8 +244,8 @@ const Captain = () => {
 
                         <div className="d-flex gap-2 align-items-center">
                           {/* Quantity Input */}
-                          <Button variant="success" onClick={() => updateQuantity(product, 1, categoryData.category)}>
-                            +
+                          <Button variant="danger" onClick={() => updateQuantity(product, -1, categoryData.category)}>
+                            -
                           </Button>
                           <Form.Control
                             type="number"
@@ -256,10 +256,10 @@ const Captain = () => {
                                                     <br/>
 
                           {/* Quantity Control Buttons */}
-                       
-                          <Button variant="danger" onClick={() => updateQuantity(product, -1, categoryData.category)}>
-                            -
+                       <Button variant="success" onClick={() => updateQuantity(product, 1, categoryData.category)}>
+                            +
                           </Button>
+                          
                         </div>
 
                         {/* Conditionally shown Comment Input */}
