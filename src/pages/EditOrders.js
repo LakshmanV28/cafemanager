@@ -1,29 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Button,
-  Form,
-  Modal,
-  Card,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Form, Modal, Card, Container, Row, Col } from "react-bootstrap";
 
 const EditOrders = () => {
   const [orders, setOrders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteItemData, setDeleteItemData] = useState({
-    orderId: "",
-    itemId: "",
-  });
-  const [newItem, setNewItem] = useState({
-    name: "",
-    qty: 1,
-    comment: "",
-    orderId: "",
-  });
+  const [deleteItemData, setDeleteItemData] = useState({ orderId: "", itemId: "" });
+  const [newItem, setNewItem] = useState({ name: "", qty: 1, comment: "", orderId: "" });
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -49,17 +33,13 @@ const EditOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(
-        "https://cashman-node.onrender.com/api/editorders"
-      );
-
+      const response = await axios.get("https://cashman-node.onrender.com/api/editorders");
       const filteredOrders = (response.data || [])
         .map((order) => ({
           ...order,
           items: order.items.filter((item) => item.status !== "deleted"), // Exclude deleted items
         }))
         .filter((order) => order.items.length > 0); // Remove orders with no remaining items
-
       setOrders(filteredOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -69,9 +49,7 @@ const EditOrders = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(
-        "https://cashman-node.onrender.com/api/products"
-      );
+      const response = await axios.get("https://cashman-node.onrender.com/api/products");
       setProducts(response.data || []);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -107,12 +85,23 @@ const EditOrders = () => {
     setSearchTerm(name);
   };
 
-  const handleUpdateItem = async (orderId, itemId, qty, comment) => {
+  // Move this out of the onChange to be called when the button is clicked
+  const handleUpdateItem = async (orderId, itemId) => {
+    const item = orders
+      .find((order) => order._id === orderId)
+      ?.items.find((item) => item._id === itemId);
+
+    if (!item) return;
+
+    const { qty, comment } = item;
+
     try {
-      const response = await axios.put(
+
+      const response = await axios.post(
         `https://cashman-node.onrender.com/api/editorders/update-item/${orderId}/${itemId}`,
         { qty, comment }
       );
+       alert("Items Updated")
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order._id === orderId ? response.data.order : order
@@ -127,13 +116,13 @@ const EditOrders = () => {
     setDeleteItemData({ orderId, itemId });
     setShowDeleteModal(true);
   };
+
   const handleDeleteItem = async () => {
     try {
       const { orderId, itemId } = deleteItemData;
       const response = await axios.post(
         `https://cashman-node.onrender.com/api/editorders/delete-item/${orderId}/${itemId}`
       );
-
       setOrders(
         (prevOrders) =>
           prevOrders
@@ -149,7 +138,6 @@ const EditOrders = () => {
             )
             .filter((order) => order.items.length > 0) // Remove empty orders
       );
-
       setShowDeleteModal(false);
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -164,14 +152,7 @@ const EditOrders = () => {
           {orders
             .filter((order) => order.items && order.items.length > 0)
             .map((order) => (
-              <Col
-                key={order._id}
-                sm={12}
-                md={6}
-                lg={4}
-                xl={3}
-                className="mb-4"
-              >
+              <Col key={order._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
                 <Card>
                   <Card.Body
                     style={{
@@ -190,28 +171,51 @@ const EditOrders = () => {
                           type="number"
                           value={item.qty}
                           onChange={(e) =>
-                            handleUpdateItem(
-                              order._id,
-                              item._id,
-                              e.target.value,
-                              item.comment
+                            setOrders((prevOrders) =>
+                              prevOrders.map((prevOrder) =>
+                                prevOrder._id === order._id
+                                  ? {
+                                      ...prevOrder,
+                                      items: prevOrder.items.map((prevItem) =>
+                                        prevItem._id === item._id
+                                          ? { ...prevItem, qty: Number(e.target.value) }
+                                          : prevItem
+                                      ),
+                                    }
+                                  : prevOrder
+                              )
                             )
                           }
                         />
                         <strong>Comment:</strong>
                         <Form.Control
                           type="text"
-                          defaultValue="comment"
                           value={item.comment}
                           onChange={(e) =>
-                            handleUpdateItem(
-                              order._id,
-                              item._id,
-                              item.qty,
-                              e.target.value
+                            setOrders((prevOrders) =>
+                              prevOrders.map((prevOrder) =>
+                                prevOrder._id === order._id
+                                  ? {
+                                      ...prevOrder,
+                                      items: prevOrder.items.map((prevItem) =>
+                                        prevItem._id === item._id
+                                          ? { ...prevItem, comment: e.target.value }
+                                          : prevItem
+                                      ),
+                                    }
+                                  : prevOrder
+                              )
                             )
                           }
                         />
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => handleUpdateItem(order._id, item._id)}
+                        >
+                          Update Item
+                        </Button>
                         <Button
                           variant="danger"
                           size="sm"
@@ -247,9 +251,7 @@ const EditOrders = () => {
               <Form.Control
                 as="select"
                 value={newItem.orderId}
-                onChange={(e) =>
-                  setNewItem({ ...newItem, orderId: e.target.value })
-                }
+                onChange={(e) => setNewItem({ ...newItem, orderId: e.target.value })}
               >
                 <option value="">Select an order</option>
                 {orders.map((order) => (
@@ -309,7 +311,7 @@ const EditOrders = () => {
                 type="number"
                 value={newItem.qty}
                 onChange={(e) =>
-                  setNewItem({ ...newItem, qty: e.target.value })
+                  setNewItem({ ...newItem, qty: Number(e.target.value) }) // Ensure it's a number
                 }
               />
             </Form.Group>

@@ -209,7 +209,7 @@ const Captain = () => {
                   : "default_image_url"; // Replace with a real default image
 
                 return (
-                  <Col key={product._id} xs={6} sm={6} md={6} lg={4} xl={3} className="mb-4">
+                  <Col key={product._id}   sm={6} md={4} lg={3} className="mb-4">
                     <Card className="border border-dark rounded position-relative">
                       {/* Top Right Comment Button */}
                       <div className="d-flex justify-content-end p-2">
@@ -231,7 +231,6 @@ const Captain = () => {
                           width={120}
                           style={{
                             borderRadius: "10px",
-                            border: "1px solid black",
                           }}
                           alt={`Product Image`}
                         />
@@ -245,17 +244,19 @@ const Captain = () => {
 
                         <div className="d-flex gap-2 align-items-center">
                           {/* Quantity Input */}
+                          <Button variant="success" onClick={() => updateQuantity(product, 1, categoryData.category)}>
+                            +
+                          </Button>
                           <Form.Control
                             type="number"
                             className="text-center mx-2"
                             value={getProductQuantity(product.name)}
                             onChange={(e) => handleQuantityChange(product, e, categoryData.category)}
                           />
+                                                    <br/>
 
                           {/* Quantity Control Buttons */}
-                          <Button variant="success" onClick={() => updateQuantity(product, 1, categoryData.category)}>
-                            +
-                          </Button>
+                       
                           <Button variant="danger" onClick={() => updateQuantity(product, -1, categoryData.category)}>
                             -
                           </Button>
@@ -263,6 +264,8 @@ const Captain = () => {
 
                         {/* Conditionally shown Comment Input */}
                         {showCommentBox[product.name] && (
+                          <div>
+                            <label>Cooking Instructions:</label>
                           <Form.Control
                             className="mt-2 border border-dark"
                             style={{ minHeight: "60px" }}
@@ -270,6 +273,7 @@ const Captain = () => {
                             value={cart.find((item) => item.name === product.name)?.comment || ""}
                             onChange={(e) => handleCommentChange(product.name, e)}
                           />
+                          </div>
                         )}
                       </Card.Body>
                     </Card>
