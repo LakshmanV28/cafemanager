@@ -100,11 +100,10 @@ const BillCounter = () => {
     );
 
     message += `\n*Total:* ₹${total}`;
-    message += `\n*Payment Mode:* ${modeOfPayment}`;
     message += `\n*Date:* ${purchaseDate.toLocaleString()}`;
 
     const encodedMessage = encodeURIComponent(message);
-    const url = `https://wa.me/+91${phoneNumber}?text=${encodedMessage}`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(url, "_blank");
   };
 
