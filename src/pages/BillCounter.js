@@ -87,7 +87,7 @@ const BillCounter = () => {
     const modeOfPayment = paymentModes[order._id] || "Cash";
     const purchaseDate = new Date();
 
-    let message = `🧾 *Bill Summary - Table ${order.tableNo}*\n\n`;
+    let message = `🧾 *Bill Summary - ${order.tableNo}*\n\n`;
 
     order.items.forEach((item, index) => {
       message += `${index + 1}. ${item.name}\n`;
@@ -104,7 +104,7 @@ const BillCounter = () => {
     message += `\n*Date:* ${purchaseDate.toLocaleString()}`;
 
     const encodedMessage = encodeURIComponent(message);
-    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    const url = `https://wa.me/+91${phoneNumber}?text=${encodedMessage}`;
     window.open(url, "_blank");
   };
 
