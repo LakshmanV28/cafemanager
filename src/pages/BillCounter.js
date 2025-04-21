@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Button, Container, Row, Col, Form } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  Modal,
+} from "react-bootstrap";
 
 const BillCounter = () => {
   const [orders, setOrders] = useState([]);
   const [paymentModes, setPaymentModes] = useState({});
+  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
     fetchOrders();
@@ -16,13 +27,12 @@ const BillCounter = () => {
         "https://cashman-node.onrender.com/api/billcounter/orders"
       );
 
-      // Filter out deleted items but keep the order if it has non-deleted items
       const filteredOrders = response.data
         .map((order) => ({
           ...order,
-          items: order.items.filter((item) => item.status !== "deleted"), // Exclude deleted items
+          items: order.items.filter((item) => item.status !== "deleted"),
         }))
-        .filter((order) => order.items.length > 0); // Remove orders with no remaining items
+        .filter((order) => order.items.length > 0);
 
       setOrders(filteredOrders);
     } catch (error) {
@@ -50,25 +60,54 @@ const BillCounter = () => {
         purchaseDate,
       };
 
-      // ✅ Post data to cart
       await axios.post(
         "https://cashman-node.onrender.com/api/cart/add",
         cartData
       );
 
-      // ✅ Remove the order from the database after checkout
       await axios.delete(
         `https://cashman-node.onrender.com/api/billcounter/orders/${order._id}`
       );
 
       alert(`${order.tableNo} checked out successfully!`);
-
-      // ✅ Refresh orders list
+      setSelectedOrder(order);
+      setShowWhatsAppModal(true);
       fetchOrders();
     } catch (error) {
       console.error("Error during checkout:", error);
     }
   };
+
+  const sendWhatsAppBill = (order, phoneNumber) => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert("Please enter a valid WhatsApp number.");
+      return;
+    }
+
+    const modeOfPayment = paymentModes[order._id] || "Cash";
+    const purchaseDate = new Date();
+
+    let message = `🧾 *Bill Summary - Table ${order.tableNo}*\n\n`;
+
+    order.items.forEach((item, index) => {
+      message += `${index + 1}. ${item.name} (${item.category || "Unknown"})\n`;
+      message += `   ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`;
+    });
+
+    const total = order.items.reduce(
+      (sum, item) => sum + item.price * item.qty,
+      0
+    );
+
+    message += `\n*Total:* ₹${total}`;
+    message += `\n*Payment Mode:* ${modeOfPayment}`;
+    message += `\n*Date:* ${purchaseDate.toLocaleString()}`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(url, "_blank");
+  };
+
 
   const handlePaymentChange = (orderId, mode) => {
     setPaymentModes((prev) => ({
@@ -79,13 +118,8 @@ const BillCounter = () => {
 
   return (
     <Container className="mt-4">
-   
-        <h2
-          className="text-center mb-4"
-        
-        >
-          · Bill Counter ·
-        </h2>{" "}
+      <h2 className="text-center mb-4">· Bill Counter ·</h2>
+
       {orders.length > 0 ? (
         <Row>
           {orders.map((order) => {
@@ -95,14 +129,7 @@ const BillCounter = () => {
             );
 
             return (
-              <Col
-                key={order._id}
-                sm={12}
-                md={6}
-                lg={4}
-                xl={3}
-                className="mb-4"
-              >
+              <Col key={order._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
                 <Card className="shadow-lg p-3 bg-white rounded">
                   <Card.Body>
                     <Card.Title>{order.tableNo}</Card.Title>
@@ -146,6 +173,8 @@ const BillCounter = () => {
                     >
                       {order.tableNo} Paid
                     </Button>
+
+
                   </Card.Body>
                 </Card>
               </Col>
@@ -155,6 +184,38 @@ const BillCounter = () => {
       ) : (
         <h4 className="text-center text-muted">No orders to process</h4>
       )}
+
+      <Modal show={showWhatsAppModal} onHide={() => setShowWhatsAppModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Send Bill via WhatsApp</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>Enter WhatsApp Number</Form.Label>
+            <Form.Control
+              type="tel"
+              placeholder="e.g., 919876543210"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowWhatsAppModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={() => {
+              sendWhatsAppBill(selectedOrder, phoneNumber);
+              setShowWhatsAppModal(false);
+              setPhoneNumber("");
+            }}
+          >
+            Send
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
