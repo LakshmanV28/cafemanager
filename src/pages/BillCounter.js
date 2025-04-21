@@ -90,7 +90,7 @@ const BillCounter = () => {
     let message = `🧾 *Bill Summary - Table ${order.tableNo}*\n\n`;
 
     order.items.forEach((item, index) => {
-      message += `${index + 1}. ${item.name} (${item.category || "Unknown"})\n`;
+      message += `${index + 1}. ${item.name}\n`;
       message += `   ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`;
     });
 
