@@ -228,7 +228,7 @@ const Products = () => {
       {/* 🛒 View Cart Button */}
       {cart.length > 0 && (
         <div className="text-center mt-4">
-          <Button variant="primary" size="lg" onClick={() => setShowCart(true)}>
+          <Button classname="btn btn-primary position-fixed bottom-0 end-0 m-4" variant="primary" size="lg" onClick={() => setShowCart(true)}>
             View Cart ({cart.reduce((total, item) => total + item.quantity, 0)} items)
           </Button>
         </div>
